@@ -5,7 +5,18 @@ import ArtCarousel from '@/components/art-carousel'
 
 export default function Home() { return <Shell>
   <section className="hero-full"><Image src={heroPhoto} alt="Isabella Hidalgo in her studio" fill priority sizes="100vw"/><div className="hero-wordmark"><Image src={wordmark} alt="Isabella Hidalgo" width={355} height={148}/></div><span className="hero-note">A practice in attention · Spain</span></section>
-  <div className="home-ticker"><span>ORIGINAL PAINTINGS</span><i>✳</i><span>LIMITED EDITIONS</span><i>✳</i><span>MADE SLOWLY IN SPAIN</span><i>✳</i><span>ORIGINAL PAINTINGS</span><i>✳</i><span>LIMITED EDITIONS</span></div>
+  <div className="home-ticker" style={{background:'#4569ff',color:'#fff'}}>
+    <span>ORIGINAL PAINTINGS</span><i>✦</i>
+    <span>LIMITED EDITIONS</span><i>✦</i>
+    <span>MADE SLOWLY IN SPAIN</span><i>✦</i>
+    <span>TO GROW STUDIO</span><i>✦</i>
+    <span>ORIGINAL PAINTINGS</span><i>✦</i>
+    <span>LIMITED EDITIONS</span><i>✦</i>
+    <span>MADE SLOWLY IN SPAIN</span><i>✦</i>
+    <span>TO GROW STUDIO</span><i>✦</i>
+    <span>ORIGINAL PAINTINGS</span><i>✦</i>
+    <span>LIMITED EDITIONS</span>
+  </div>
 
   {/* ── STATEMENT SECTION ── */}
   <section className="statement-block section-shell">

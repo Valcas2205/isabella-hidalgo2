@@ -1,27 +1,23 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Shell, PageIntro, aboutPhoto, formPhoto, works } from '@/components/site-chrome'
+import { Shell, PageIntro, aboutPhoto } from '@/components/site-chrome'
 
-/* ─── Simulated reel data ─────────────────────────────────────────────────
-   In production, replace src with real Instagram Reel embed URLs or your
-   own video CDN links. These use existing artwork images as cover frames.
-─────────────────────────────────────────────────────────────────────────── */
 const reels = [
   {
     cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/arte1-xJIZdCPClUJgazcWHQp1iVzsEwfSVD.avif',
-    label: 'Studio process · oil on canvas',
+    label: 'Studio process — oil on canvas',
     tag: 'PROCESS',
     duration: '0:38',
   },
   {
     cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/arte2-eE4D4WP1mQkge6l5E6iyH9GIGygMV4.avif',
-    label: 'Colour mixing · quiet palette',
+    label: 'Colour mixing — quiet palette',
     tag: 'COLOUR',
     duration: '0:52',
   },
   {
     cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/arte3-EMEskmNVzkVqXiQaoXKTwXQ6Zn51mc.avif',
-    label: 'Light study · linen texture',
+    label: 'Light study — linen texture',
     tag: 'LIGHT',
     duration: '1:04',
   },
@@ -32,13 +28,11 @@ const reels = [
     duration: '0:44',
   },
 ]
-
 export default function About() {
   return (
     <Shell>
       {/* ── PAGE INTRO ── */}
       <PageIntro eyebrow="About Isabella" title="A practice rooted in presence.">
-        <p className="intro-lede">Isabella Hidalgo is a contemporary fine artist based in Spain, working from her studio To Grow.</p>
       </PageIntro>
 
       {/* ── PORTRAIT + BIO ── */}
@@ -47,6 +41,7 @@ export default function About() {
           <Image src={aboutPhoto} alt="Isabella Hidalgo portrait" fill sizes="(max-width: 768px) 100vw, 45vw"/>
         </div>
         <div className="about-copy">
+          <p className="intro-lede" style={{ marginBottom: '36px', color: 'var(--ink)' }}>Isabella Hidalgo is a contemporary fine artist based in Spain, working from her studio To Grow.</p>
           <p>My work begins as an inner exploration, where painting becomes a practice of presence. Working with diluted acrylics on cotton canvas, I allow color, water, and movement to unfold freely, creating layered atmospheres inspired by meditative states and the shifting skies that have accompanied my life. Each piece holds an unseen foundation of written mantra or blessing, guiding the process from within.</p>
           <p>Handwritten text, influenced by motherhood and observing my daughter learn to write, appears as instinctive, imperfect marks that carry both intimacy and play. Through abstraction, I seek to move beyond control toward trust and flow, creating quiet spaces for pause and reflection. My paintings become subtle portals into stillness, offering a return to presence in a world that moves too fast.</p>
           <p>For me, creating is an act of surrender and service. It is a way of allowing something to move through me rather than something I control. Each piece is a reminder, first for myself and then for others.</p>
@@ -58,7 +53,7 @@ export default function About() {
       <section className="about-manifesto section-shell">
         <span className="about-manifesto-line"/>
         <blockquote className="about-manifesto-quote">
-          "I paint what I almost missed —<br/>
+          "I paint what I almost missed —"<br/>
           <em>the light that stayed a second longer than expected.</em>"
         </blockquote>
         <span className="about-manifesto-line"/>
@@ -68,7 +63,7 @@ export default function About() {
       <section className="reels-section">
         <div className="reels-header section-shell">
           <div>
-            <p className="eyebrow">From the studio · @isabellahidalgo</p>
+            <p className="eyebrow">From the studio — @isabellahidalgo</p>
             <h2 className="reels-title">
               Seen in<br/><em>real time.</em>
             </h2>
@@ -94,12 +89,12 @@ export default function About() {
               style={{ '--delay': `${i * 0.12}s` } as React.CSSProperties}
             >
               <div className="reel-img">
-                <Image src={reel.cover} alt={reel.label} fill sizes="(max-width:768px) 45vw, 22vw"/>
-                {/* play overlay */}
+                <div className="reel-img-inner">
+                  <Image src={reel.cover} alt={reel.label} fill sizes="(max-width:768px) 45vw, 22vw"/>
+                </div>
                 <div className="reel-play">
                   <span className="reel-play-ring">▶</span>
                 </div>
-                {/* tag + duration */}
                 <span className="reel-tag">{reel.tag}</span>
                 <span className="reel-dur">{reel.duration}</span>
               </div>
