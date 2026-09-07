@@ -4,24 +4,29 @@ import { Shell, Container, heroPhoto, wordmark } from '@/components/site-chrome'
 import ArtCarousel from '@/components/art-carousel'
 import Reveal from '@/components/reveal'
 import { works, photos } from '@/lib/works'
+import { getDict, isLocale, defaultLocale } from '@/lib/i18n'
 
-export default function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: raw } = await params
+  const locale = isLocale(raw) ? raw : defaultLocale
+  const t = getDict(locale)
+  const at = (p: string) => `/${locale}${p}`
+
   return <Shell>
 
     {/* ── HERO (sin cambios) ── */}
     <section className="hero-full">
-      <Image src={heroPhoto} alt="Isabella Hidalgo en su estudio" fill priority sizes="100vw"/>
+      <Image src={heroPhoto} alt="Isabella Hidalgo" fill priority sizes="100vw"/>
       <div className="hero-wordmark"><Image src={wordmark} alt="Isabella Hidalgo" width={355} height={148}/></div>
-      <span className="hero-note">A practice in attention · Spain</span>
+      <span className="hero-note">{t.home.heroNote}</span>
     </section>
 
     <div className="home-ticker">
       {Array.from({ length: 3 }, (_, i) => (
         <span className="ticker-run" key={i} aria-hidden={i > 0}>
-          <span>PINTURA ORIGINAL</span><i>✦</i>
-          <span>EDICIONES LIMITADAS</span><i>✦</i>
-          <span>HECHO DESPACIO EN ESPAÑA</span><i>✦</i>
-          <span>TO GROW STUDIO</span><i>✦</i>
+          {t.home.ticker.map(word => (
+            <span key={word}>{word}<i>✦</i></span>
+          ))}
         </span>
       ))}
     </div>
@@ -29,18 +34,23 @@ export default function Home() {
     {/* ── DECLARACIÓN + RETRATO ── */}
     <Container as="section" className="statement-block">
       <div className="statement-left">
-        <div className="statement-label"><span className="blue-dot"/> Isabella Hidalgo<br/>Fine Art / 2026</div>
+        <div className="statement-label">
+          <span className="blue-dot"/>
+          {t.home.statementLabel.split('\n').map((line, i) => (
+            <span key={line}>{i > 0 && <br/>}{line}</span>
+          ))}
+        </div>
         <Reveal className="statement-copy" variant="up">
-          <p>Vivimos rodeados de cosas que piden nuestra atención.</p>
-          <p>Y sin embargo, lo que más nos marca suele pasar en los momentos que casi no vemos.</p>
-          <p>Mi trabajo es una exploración continua de la atención, la percepción y las formas silenciosas en que damos sentido a estar vivos.</p>
+          <p>{t.home.statement1}</p>
+          <p>{t.home.statement2}</p>
+          <p>{t.home.statement3}</p>
           <span className="signature">_isa</span>
         </Reveal>
       </div>
       <Reveal className="statement-portrait" variant="scale" delay={120}>
         <div className="statement-portrait-frame">
-          <Image src={photos.isabellaGuided} alt="Isabella Hidalgo en el estudio" fill sizes="(max-width:768px) 100vw, 40vw" style={{ objectFit: 'cover' }}/>
-          <div className="statement-portrait-tag"><span>To Grow Studio · España</span></div>
+          <Image src={photos.isabellaGuided} alt="Isabella Hidalgo" fill sizes="(max-width:768px) 100vw, 40vw" style={{ objectFit: 'cover' }}/>
+          <div className="statement-portrait-tag"><span>{t.home.portraitTag}</span></div>
         </div>
       </Reveal>
     </Container>
@@ -51,14 +61,14 @@ export default function Home() {
     <section className="phrase-index">
       <Container>
         <Reveal className="phrase-index-head" variant="up">
-          <p className="eyebrow">Las frases</p>
-          <h2>Cada cuadro<br/><em>dice algo.</em></h2>
+          <p className="eyebrow">{t.home.phrasesEyebrow}</p>
+          <h2>{t.home.phrasesTitle}<br/><em>{t.home.phrasesTitleEm}</em></h2>
         </Reveal>
 
         <ol className="phrase-list">
           {works.map((w, i) => (
             <Reveal as="li" key={w.slug} variant="up" delay={i * 60}>
-              <Link href={`/gallery/${w.slug}`} className="phrase-row">
+              <Link href={at(`/gallery/${w.slug}`)} className="phrase-row">
                 <span className="phrase-num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="phrase-text">{w.quote}</span>
                 <span className="phrase-meta">{w.size}</span>
@@ -72,16 +82,10 @@ export default function Home() {
 
     {/* ── BANDA PANORÁMICA A TODO EL ANCHO ── */}
     <section className="wide-band">
-      <Image
-        src={photos.guidedWide}
-        alt="Isabella pasando frente a «Always guided by the universe»"
-        fill
-        sizes="100vw"
-        style={{ objectFit: 'cover' }}
-      />
+      <Image src={photos.guidedWide} alt="Always guided by the universe" fill sizes="100vw" style={{ objectFit: 'cover' }}/>
       <div className="wide-band-caption">
         <span>Always guided by the universe</span>
-        <span>Acrílico sobre algodón · 2026</span>
+        <span>{t.home.bandCaption}</span>
       </div>
     </section>
 
@@ -89,10 +93,10 @@ export default function Home() {
     <section className="art-wall">
       <Container className="art-wall-top">
         <Reveal variant="up">
-          <p className="eyebrow">La selección actual</p>
-          <h2>Quédate con<br/><em>la sensación.</em></h2>
+          <p className="eyebrow">{t.home.selectionEyebrow}</p>
+          <h2>{t.home.selectionTitle}<br/><em>{t.home.selectionTitleEm}</em></h2>
         </Reveal>
-        <Link href="/gallery" className="circle-link">Ver galería ↗</Link>
+        <Link href={at('/gallery')} className="circle-link">{t.home.viewGallery}</Link>
       </Container>
       <ArtCarousel works={works} />
     </section>
@@ -100,20 +104,20 @@ export default function Home() {
     {/* ── DÍPTICO EDITORIAL ── */}
     <Container as="section" className="diptych">
       <Reveal as="figure" className="diptych-figure diptych-tall" variant="left">
-        <Image src={photos.studioFrames} alt="Isabella recogiendo bastidores" fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
-        <figcaption>Recogiendo bastidores · Madrid</figcaption>
+        <Image src={photos.studioFrames} alt={t.home.captionFrames} fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
+        <figcaption>{t.home.captionFrames}</figcaption>
       </Reveal>
 
       <div className="diptych-col">
         <Reveal as="figure" className="diptych-figure" variant="right" delay={100}>
-          <Image src={photos.canvasStack} alt="Lienzos pintados apilados" fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
-          <figcaption>La pila del estudio</figcaption>
+          <Image src={photos.canvasStack} alt={t.home.captionStack} fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
+          <figcaption>{t.home.captionStack}</figcaption>
         </Reveal>
         <Reveal className="diptych-copy" variant="up" delay={180}>
-          <p className="eyebrow">El proceso</p>
-          <h2>Se pinta<br/><em>en el suelo.</em></h2>
-          <p>Acrílico muy diluido sobre algodón crudo. El color se mueve por gravedad y hay que caminar alrededor del lienzo para verlo aparecer. La frase se escribe al final, cuando la pieza ya no pide nada más.</p>
-          <Link href="/about" className="button-link button-plain">Conoce a Isabella ↗</Link>
+          <p className="eyebrow">{t.home.processEyebrow}</p>
+          <h2>{t.home.processTitle}<br/><em>{t.home.processTitleEm}</em></h2>
+          <p>{t.home.processBody}</p>
+          <Link href={at('/about')} className="button-link button-plain">{t.home.meetIsabella}</Link>
         </Reveal>
       </div>
     </Container>
@@ -121,14 +125,14 @@ export default function Home() {
     {/* ── VÍDEO DE ESTUDIO ── */}
     <section className="studio-film">
       <div className="film-overlay">
-        <p className="eyebrow">Una imagen en movimiento de la práctica</p>
-        <h2>Haz sitio<br/><em>al asombro.</em></h2>
-        <Link href="/about" className="button-link button-film">Entra al estudio ↗</Link>
+        <p className="eyebrow">{t.home.filmEyebrow}</p>
+        <h2>{t.home.filmTitle}<br/><em>{t.home.filmTitleEm}</em></h2>
+        <Link href={at('/about')} className="button-link button-film">{t.home.enterStudio}</Link>
       </div>
       <video
         src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/file-YwQlDrLYxsD6PxOQHo8EPDP0PWg3Hk.mp4"
         autoPlay muted loop playsInline
-        aria-label="Isabella Hidalgo trabajando en su estudio"
+        aria-label="Isabella Hidalgo"
       />
       <div className="film-controls"><span>TO GROW STUDIO</span><span>PLAYING · 00:24</span></div>
     </section>
@@ -136,13 +140,13 @@ export default function Home() {
     {/* ── LLEVAR ARTE A CASA ── */}
     <Container as="section" className="shop-callout">
       <Reveal className="portrait-frame shop-portrait" variant="scale">
-        <Image src={photos.prismHand} alt="Luz prismática sobre la pared del estudio" fill sizes="(max-width:768px) 100vw, 50vw" style={{ objectFit: 'cover' }}/>
+        <Image src={photos.prismHand} alt={t.home.prismAlt} fill sizes="(max-width:768px) 100vw, 50vw" style={{ objectFit: 'cover' }}/>
       </Reveal>
       <Reveal variant="right" delay={120}>
-        <p className="eyebrow">Llévate una pieza</p>
-        <h2>Una pausa pequeña<br/><em>para tu pared.</em></h2>
-        <p>Pintura original y ediciones limitadas firmadas, para espacios que valoran una belleza más lenta.</p>
-        <Link href="/gallery" className="button-link button-blue">Ver obra disponible ↗</Link>
+        <p className="eyebrow">{t.home.shopEyebrow}</p>
+        <h2>{t.home.shopTitle}<br/><em>{t.home.shopTitleEm}</em></h2>
+        <p>{t.home.shopBody}</p>
+        <Link href={at('/gallery')} className="button-link button-blue">{t.home.shopCta}</Link>
       </Reveal>
     </Container>
 

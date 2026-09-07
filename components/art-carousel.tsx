@@ -1,9 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRef, useState, useContext } from 'react'
 import { CartContext } from '@/components/site-chrome'
+import { useI18n, LocaleLink } from '@/components/i18n-provider'
 import type { Work } from '@/lib/works'
 
 export default function ArtCarousel({ works }: { works: Work[] }) {
@@ -15,6 +15,7 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
   const moved = useRef(0)
 
   const { add, items, openCart } = useContext(CartContext)
+  const { t } = useI18n()
 
   const handlePointerDown = (e: React.PointerEvent) => {
     setDragging(true)
@@ -66,7 +67,7 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
           const inCart = items.some(item => item.slug === work.slug)
           return (
             <article key={work.slug} className="carousel-card">
-              <Link
+              <LocaleLink
                 href={`/gallery/${work.slug}`}
                 className="carousel-img"
                 /* Si el usuario venía arrastrando, no navegamos. */
@@ -80,12 +81,12 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
                   style={{ objectFit: 'cover' }}
                 />
                 <span className="carousel-index">{(i + 1).toString().padStart(2, '0')}</span>
-                {!work.available && <span className="carousel-sold">Vendida</span>}
-              </Link>
+                {!work.available && <span className="carousel-sold">{t.gallery.sold}</span>}
+              </LocaleLink>
 
               <div className="carousel-meta">
                 <div>
-                  <h3><Link href={`/gallery/${work.slug}`}>{work.title}</Link></h3>
+                  <h3><LocaleLink href={`/gallery/${work.slug}`}>{work.title}</LocaleLink></h3>
                   <p>{work.size} · €{work.price.toLocaleString()}</p>
                 </div>
                 {work.available ? (
@@ -94,10 +95,10 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
                     onClick={() => { add(work); openCart() }}
                     disabled={inCart}
                   >
-                    {inCart ? '✓' : 'Collect'}
+                    {inCart ? '✓' : t.gallery.collect}
                   </button>
                 ) : (
-                  <Link href={`/gallery/${work.slug}`} className="collect-btn collected">Ver</Link>
+                  <LocaleLink href={`/gallery/${work.slug}`} className="collect-btn collected">{t.gallery.view}</LocaleLink>
                 )}
               </div>
             </article>
@@ -105,10 +106,10 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
         })}
 
         <div className="carousel-card carousel-cta-card">
-          <Link href="/gallery" className="carousel-cta-inner">
+          <LocaleLink href="/gallery" className="carousel-cta-inner">
             <span className="carousel-cta-ring">＋</span>
-            <p>Ver la galería completa</p>
-          </Link>
+            <p>{t.home.fullGallery}</p>
+          </LocaleLink>
         </div>
       </div>
 

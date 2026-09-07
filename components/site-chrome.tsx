@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
 import { ShoppingBag, X, Minus, Plus, Trash2, ArrowUpRight } from 'lucide-react'
 import { useState, createContext, useContext, useCallback } from 'react'
 import { works, type Work } from '@/lib/works'
+import { useI18n, LocaleLink, LocaleSwitcher } from '@/components/i18n-provider'
 
 /* ── Constants ── */
 const logo = '/logo.png'
@@ -47,42 +47,43 @@ export const CartContext = createContext<CartCtx>({
 /* ── Cart panel ── */
 function CartPanel() {
   const { items, closeCart, remove, change } = useContext(CartContext)
+  const { t } = useI18n()
   const total = items.reduce((s, i) => s + i.price * i.qty, 0)
 
   return (
     <>
       <div className="cart-backdrop" onClick={closeCart} aria-hidden="true" />
-      <aside className="cart-panel" aria-label="Collection bag">
+      <aside className="cart-panel" aria-label={t.cart.title}>
         <div className="cart-head">
-          <p className="eyebrow">Your collection</p>
-          <button onClick={closeCart} aria-label="Close bag"><X size={20}/></button>
+          <p className="eyebrow">{t.cart.title}</p>
+          <button onClick={closeCart} aria-label={t.cart.close}><X size={20}/></button>
         </div>
 
         {items.length === 0 ? (
           <div className="cart-empty">
             <span className="cart-mark">◯</span>
-            <h2>Nothing held yet.</h2>
-            <p>Works you are considering will appear here. Add a piece from the gallery to begin.</p>
-            <Link href="/gallery" onClick={closeCart} className="button-link">Explore the gallery ↗</Link>
+            <h2>{t.cart.emptyTitle}</h2>
+            <p>{t.cart.emptyBody}</p>
+            <LocaleLink href="/gallery" onClick={closeCart} className="button-link">{t.cart.exploreGallery}</LocaleLink>
           </div>
         ) : (
           <>
             <div className="cart-items">
               {items.map(item => (
                 <div key={item.slug} className="cart-item">
-                  <Link href={`/gallery/${item.slug}`} onClick={closeCart} className="cart-item-img">
+                  <LocaleLink href={`/gallery/${item.slug}`} onClick={closeCart} className="cart-item-img">
                     <Image src={item.image} alt={item.title} fill sizes="90px" style={{ objectFit: 'cover' }}/>
-                  </Link>
+                  </LocaleLink>
                   <div className="cart-item-info">
-                    <Link href={`/gallery/${item.slug}`} onClick={closeCart}>
+                    <LocaleLink href={`/gallery/${item.slug}`} onClick={closeCart}>
                       <p className="cart-item-title">{item.title}</p>
-                    </Link>
+                    </LocaleLink>
                     <p className="cart-item-size">{item.size}</p>
                     <div className="cart-item-controls">
-                      <button onClick={() => change(item.slug, -1)} aria-label="Quitar uno"><Minus size={11}/></button>
+                      <button onClick={() => change(item.slug, -1)} aria-label={t.cart.less}><Minus size={11}/></button>
                       <span>{item.qty}</span>
-                      <button onClick={() => change(item.slug, 1)} aria-label="Añadir uno"><Plus size={11}/></button>
-                      <button className="cart-item-trash" onClick={() => remove(item.slug)} aria-label="Eliminar"><Trash2 size={12}/></button>
+                      <button onClick={() => change(item.slug, 1)} aria-label={t.cart.more}><Plus size={11}/></button>
+                      <button className="cart-item-trash" onClick={() => remove(item.slug)} aria-label={t.cart.remove}><Trash2 size={12}/></button>
                     </div>
                   </div>
                   <p className="cart-item-price">€{(item.price * item.qty).toLocaleString()}</p>
@@ -92,12 +93,12 @@ function CartPanel() {
 
             <div className="cart-foot">
               <div className="cart-total">
-                <span>Subtotal</span>
+                <span>{t.cart.subtotal}</span>
                 <span>€{total.toLocaleString()}</span>
               </div>
-              <p className="cart-note">Shipping &amp; framing calculated on enquiry. All prices in EUR.</p>
-              <Link href="/contact" onClick={closeCart} className="cart-checkout">Send enquiry ↗</Link>
-              <p className="cart-note cart-note-small">20% of selected works donated to Sun.Risas · Venezuela</p>
+              <p className="cart-note">{t.cart.shippingNote}</p>
+              <LocaleLink href="/contact" onClick={closeCart} className="cart-checkout">{t.cart.checkout}</LocaleLink>
+              <p className="cart-note cart-note-small">{t.cart.donationNote}</p>
             </div>
           </>
         )}
@@ -109,27 +110,31 @@ function CartPanel() {
 /* ─── Header ─── */
 export function Header() {
   const { items, openCart } = useContext(CartContext)
+  const { t } = useI18n()
   const [navOpen, setNavOpen] = useState(false)
   const count = items.reduce((n, i) => n + i.qty, 0)
+  const close = () => setNavOpen(false)
 
   return (
     <header className={`site-header${navOpen ? ' nav-open' : ''}`}>
       <Container>
-        <Link href="/" className="brand" aria-label="Isabella Hidalgo home" onClick={() => setNavOpen(false)}>
+        <LocaleLink href="/" className="brand" aria-label="Isabella Hidalgo" onClick={close}>
           <Image src={logo} alt="Isabella Hidalgo Fine Art" width={140} height={160} priority />
-        </Link>
+        </LocaleLink>
 
         <nav aria-label="Main navigation" id="main-nav">
-          <Link href="/" onClick={() => setNavOpen(false)}>Home</Link>
-          <Link href="/about" onClick={() => setNavOpen(false)}>About</Link>
-          <Link href="/gallery" onClick={() => setNavOpen(false)}>Gallery</Link>
-          <Link href="/contact" onClick={() => setNavOpen(false)}>Contact</Link>
+          <LocaleLink href="/" onClick={close}>{t.nav.home}</LocaleLink>
+          <LocaleLink href="/about" onClick={close}>{t.nav.about}</LocaleLink>
+          <LocaleLink href="/gallery" onClick={close}>{t.nav.gallery}</LocaleLink>
+          <LocaleLink href="/contact" onClick={close}>{t.nav.contact}</LocaleLink>
         </nav>
 
         <div className="header-actions">
-          <button className="bag-button" onClick={openCart} aria-label="Open collection bag">
+          <LocaleSwitcher />
+
+          <button className="bag-button" onClick={openCart} aria-label={t.nav.openBag}>
             <ShoppingBag size={18}/>
-            <span className="bag-label">Bag</span>
+            <span className="bag-label">{t.nav.bag}</span>
             {count > 0 && <span className="bag-count">{count}</span>}
           </button>
 
@@ -139,7 +144,7 @@ export function Header() {
             onClick={() => setNavOpen(o => !o)}
             aria-expanded={navOpen}
             aria-controls="main-nav"
-            aria-label={navOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-label={navOpen ? t.nav.closeMenu : t.nav.openMenu}
           >
             <span/><span/>
           </button>
@@ -152,6 +157,7 @@ export function Header() {
 /* ─── WorkCard: tarjeta de galería ─── */
 export function WorkCard({ work, priority = false }: { work: Work; priority?: boolean }) {
   const { add, items, openCart } = useContext(CartContext)
+  const { t } = useI18n()
   if (!work) return null
   const inCart = items.some(i => i.slug === work.slug)
 
@@ -163,7 +169,7 @@ export function WorkCard({ work, priority = false }: { work: Work; priority?: bo
 
   return (
     <article className="new-work-card">
-      <Link href={`/gallery/${work.slug}`} className="new-work-image">
+      <LocaleLink href={`/gallery/${work.slug}`} className="new-work-image">
         <Image
           src={work.images[0]}
           alt={work.title}
@@ -172,14 +178,14 @@ export function WorkCard({ work, priority = false }: { work: Work; priority?: bo
           sizes="(max-width:500px) 100vw, (max-width:900px) 50vw, 33vw"
           priority={priority}
         />
-        {work.donation && <span className="work-badge">20% a Sun.Risas</span>}
-        {!work.available && <span className="work-sold">Vendida</span>}
-      </Link>
+        {work.donation && <span className="work-badge">{t.gallery.donation}</span>}
+        {!work.available && <span className="work-sold">{t.gallery.sold}</span>}
+      </LocaleLink>
 
       <div className="new-work-meta">
         <div className="meta-row">
           <h3 className="new-work-title">
-            <Link href={`/gallery/${work.slug}`}>{work.title}</Link>
+            <LocaleLink href={`/gallery/${work.slug}`}>{work.title}</LocaleLink>
           </h3>
           <span className="new-work-price">€{work.price.toLocaleString()}</span>
         </div>
@@ -189,7 +195,7 @@ export function WorkCard({ work, priority = false }: { work: Work; priority?: bo
             <button
               className={`new-work-buy ${inCart ? 'in-cart' : ''}`}
               onClick={handleAdd}
-              aria-label={`Añadir ${work.title} a la bolsa`}
+              aria-label={t.gallery.addTo(work.title)}
             >
               {inCart ? '✓' : <ShoppingBag size={17} />}
             </button>
@@ -203,18 +209,12 @@ export function WorkCard({ work, priority = false }: { work: Work; priority?: bo
 }
 
 /* ─── Otros componentes ─── */
-export const faqs = [
-  ['Are the paintings available to collect?', 'Yes. Original paintings are available through the studio. Write to Isabella with the work you are drawn to and she will share availability, dimensions and shipping details.'],
-  ['Do you ship internationally?', 'Works and fine art prints can be shipped internationally from Spain. Each piece is carefully prepared and insured for its journey.'],
-  ['Are prints signed?', 'Limited fine art prints are signed and numbered by Isabella, and produced in small editions on archival paper.'],
-  ['Can I visit the studio?', 'Studio visits are possible by appointment at To Grow Studio.'],
-]
-
 export function Faq() {
+  const { t } = useI18n()
   const [open, setOpen] = useState<number | null>(null)
   return (
     <div className="faq">
-      {faqs.map(([q, a], i) => (
+      {t.contact.faqs.map(([q, a], i) => (
         <div className="faq-item" key={q}>
           <button onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}>
             <span>{q}</span>
@@ -238,6 +238,7 @@ export function PageIntro({ eyebrow, title, children }: { eyebrow: string; title
 }
 
 export function Footer() {
+  const { t } = useI18n()
   return (
     <footer className="site-footer">
       <Container>
@@ -245,12 +246,14 @@ export function Footer() {
           <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={80} style={{ objectFit: 'contain' }}/>
           <div>
             <p>Isabella Hidalgo Fine Art</p>
-            <p>To Grow Studio · Spain</p>
+            <p>{t.footer.studio}</p>
           </div>
         </div>
         <div className="footer-social">
-          <a href="https://www.instagram.com/isabellahidalgo" target="_blank" rel="noopener noreferrer">Instagram <ArrowUpRight size={11}/></a>
-          <a href="mailto:hola@isabellahidalgo.com">Email <ArrowUpRight size={11}/></a>
+          <a href="https://www.instagram.com/isabellahidalgo" target="_blank" rel="noopener noreferrer">
+            {t.footer.instagram} <ArrowUpRight size={11}/>
+          </a>
+          <a href="mailto:hola@isabellahidalgo.com">{t.footer.email} <ArrowUpRight size={11}/></a>
         </div>
         <p>© 2026</p>
       </Container>
