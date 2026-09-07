@@ -6,7 +6,7 @@ import { ShoppingBag, X, Minus, Plus, Trash2 } from 'lucide-react'
 import { useState, createContext, useContext, useCallback } from 'react'
 
 /* ── Constants ── */
-const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo1-MbSK6TaCUScoNSCFL65oAlw6QbPhB9.png'
+const logo = '/logo.png'
 
 /* ── Works data (Spring 2026 catalogue) ── */
 export type WorkData = {
@@ -146,7 +146,7 @@ export function Header() {
   return (
     <header className="site-header">
       <Link href="/" className="brand" aria-label="Isabella Hidalgo home">
-        <Image src={logo} alt="Isabella Hidalgo Fine Art" width={126} height={150} priority />
+        <Image src={logo} alt="Isabella Hidalgo Fine Art" width={140} height={160} priority />
       </Link>
       <nav aria-label="Main navigation">
         <Link href="/">Home</Link>
@@ -155,11 +155,9 @@ export function Header() {
         <Link href="/contact">Contact</Link>
       </nav>
       <button className="bag-button" onClick={openCart} aria-label="Open collection bag">
-        <ShoppingBag size={17}/>
-        <span>
-          Bag
-          {items.length > 0 && <span className="bag-count">{items.length}</span>}
-        </span>
+        <ShoppingBag size={18}/>
+        <span className="bag-label">Bag</span>
+        {items.length > 0 && <span className="bag-count">{items.length}</span>}
       </button>
     </header>
   )
@@ -241,7 +239,7 @@ export function PageIntro({ eyebrow, title, children }: { eyebrow: string; title
 export function Footer() {
   return (
     <footer className="site-footer">
-      <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={96}/>
+      <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={80} style={{ objectFit: 'contain' }}/>
       <div>
         <p>Isabella Hidalgo Fine Art</p>
         <p>To Grow Studio · Spain</p>
