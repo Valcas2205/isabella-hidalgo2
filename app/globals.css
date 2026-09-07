@@ -279,36 +279,52 @@ button{font:inherit;color:inherit}
 /* ── MOBILE: ≤ 768px ── */
 @media(max-width:768px){
 
-  /* ── HEADER MÓVIL: menú en drawer ──
+  /* ── HEADER MÓVIL: menú a pantalla completa ──
      Cuatro enlaces a 9px entre el logo y la bolsa quedaban ilegibles.
-     En móvil la navegación pasa a un panel desplegable. */
-  .site-header .section-shell{gap:16px}
+     En móvil la navegación se abre como panel a pantalla completa, con
+     los enlaces grandes y el selector de idioma dentro. */
+  .site-header{position:sticky;top:0}
+  .site-header .section-shell{gap:14px}
   .brand{width:auto;height:100%;display:flex;align-items:center;flex-shrink:0}
-  .brand img{width:auto;height:52px;object-fit:contain;object-position:left}
+  .brand img{width:auto;height:50px;object-fit:contain;object-position:left}
 
   .nav-toggle{display:flex}
+  .locale-desktop{display:none}
 
   .site-header nav{
-    position:absolute;left:0;right:0;top:100%;
-    flex-direction:column;align-items:stretch;justify-content:flex-start;
-    gap:0;margin:0;padding:0 var(--gutter);
-    background:var(--background);border-bottom:1px solid var(--line);
-    /* Cerrado: colapsado y fuera del orden de tabulación visual */
-    display:grid;grid-template-rows:0fr;
-    opacity:0;visibility:hidden;
-    transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1),opacity .25s,visibility .38s;
-    box-shadow:0 18px 40px #16284614;
+    position:fixed;inset:var(--header-h) 0 0;z-index:14;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:0;margin:0;padding:0 var(--gutter) 12vh;
+    background:var(--background);
+    /* Cerrado: invisible y sin capturar toques */
+    opacity:0;visibility:hidden;transform:translateY(-10px);
+    transition:opacity .32s cubic-bezier(.2,.8,.2,1),transform .32s cubic-bezier(.2,.8,.2,1),visibility .32s;
+    overflow-y:auto
   }
-  .site-header.nav-open nav{grid-template-rows:1fr;opacity:1;visibility:visible}
-  .site-header nav > *{min-height:0}
-  .site-header nav a{
-    font-size:13px;letter-spacing:.14em;padding:16px 0;
-    border-bottom:1px solid var(--line);overflow:hidden
-  }
-  .site-header nav a:last-child{border-bottom:0}
-  .site-header nav a::after{display:none}
+  .site-header.nav-open nav{opacity:1;visibility:visible;transform:none}
 
-  .header-actions{gap:6px}
+  .nav-links{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+  .site-header nav a{
+    font:clamp(30px,8.5vw,44px) Georgia,serif;
+    letter-spacing:-.03em;text-transform:none;padding:12px 0;color:var(--ink);
+    opacity:0;transform:translateY(14px);transition:opacity .4s ease,transform .4s ease
+  }
+  .site-header.nav-open nav a{opacity:1;transform:none}
+  .site-header.nav-open .nav-links a:nth-child(1){transition-delay:.10s}
+  .site-header.nav-open .nav-links a:nth-child(2){transition-delay:.16s}
+  .site-header.nav-open .nav-links a:nth-child(3){transition-delay:.22s}
+  .site-header.nav-open .nav-links a:nth-child(4){transition-delay:.28s}
+  .site-header nav a::after{display:none}
+  .site-header nav a:active{color:var(--blue)}
+
+  .nav-drawer-foot{
+    margin-top:44px;opacity:0;transition:opacity .4s ease .34s;
+    display:flex;justify-content:center;width:100%
+  }
+  .site-header.nav-open .nav-drawer-foot{opacity:1}
+  .nav-drawer-foot .locale-switch a{padding:10px 18px;font-size:11px}
+
+  .header-actions{gap:8px;position:relative;z-index:15}
   .bag-button{
     gap:0;font-size:0;width:42px;height:42px;
     display:flex;align-items:center;justify-content:center;
@@ -329,7 +345,7 @@ button{font:inherit;color:inherit}
   .home-ticker i{font-size:12px}
 
   /* ── STATEMENT BLOCK ──
-     Mobile order: label (title) → portrait (photo) → copy (text)
+     Orden en móvil: etiqueta (título) → texto → foto
      We use display:contents on statement-left to unwrap its children
      so CSS order can place label→portrait→copy
   */
@@ -342,8 +358,8 @@ button{font:inherit;color:inherit}
   }
   .statement-left{display:contents}
   .statement-label{order:1}
-  .statement-copy{order:3;font-size:18px;line-height:1.35}
-  .statement-portrait{order:2;width:100%;position:relative}
+  .statement-copy{order:2;font-size:18px;line-height:1.35}
+  .statement-portrait{order:3;width:100%;position:relative}
   .statement-portrait-frame{height:360px;width:100%}
   .statement-portrait-tag{bottom:14px;left:14px;padding:6px 12px;font-size:9px}
 
@@ -399,7 +415,7 @@ button{font:inherit;color:inherit}
   .intro-lede{font-size:19px;line-height:1.4}
 
   /* ── ABOUT: PORTRAIT + BIO ──
-     Mobile order: title area first, then photo, then copy text
+     Orden en móvil: título (de PageIntro) → texto → foto
   */
   .about-layout{
     display:flex;
@@ -407,11 +423,11 @@ button{font:inherit;color:inherit}
     gap:32px;
     padding-bottom:70px
   }
-  .portrait{height:400px;width:100%;order:1}
+  .portrait{height:400px;width:100%;order:2}
   .about-copy{
     max-width:100%;
     padding-top:0;
-    order:2
+    order:1
   }
   .about-copy p{font-size:15px;margin-bottom:20px}
   .about-copy .intro-lede{font-size:18px}
@@ -478,7 +494,7 @@ button{font:inherit;color:inherit}
   .new-work-artist{font-size:11px}
 
   /* ── CONTACT: FORM + IMAGE ──
-     Mobile order: title (from PageIntro), image, then form
+     Orden en móvil: título (de PageIntro) → formulario → foto
   */
   .contact-layout{
     display:flex;
@@ -486,8 +502,8 @@ button{font:inherit;color:inherit}
     gap:32px;
     padding-bottom:70px
   }
-  .form-image{height:320px;width:100%;order:1}
-  .inquiry-form{order:2;gap:18px}
+  .form-image{height:320px;width:100%;order:2}
+  .inquiry-form{order:1;gap:18px}
   .inquiry-form label{font-size:9px;gap:6px}
   .inquiry-form input,
   .inquiry-form select,
@@ -600,13 +616,24 @@ button{font:inherit;color:inherit}
    HEADER — acciones y botón de menú
    ═══════════════════════════════════════════════════════════ */
 .header-actions{display:flex;align-items:center;gap:14px;flex-shrink:0}
+
+/* En escritorio los enlaces son hijos directos del nav en fila; el
+   div .nav-links sólo agrupa para el panel móvil. */
+.nav-links{display:contents}
+.nav-drawer-foot{display:none}
+
 .nav-toggle{
-  display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:8px;
-  background:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0
+  display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:8px;
+  background:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0
 }
-.nav-toggle span{display:block;width:17px;height:1.5px;background:var(--ink);transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .2s}
-.site-header.nav-open .nav-toggle span:first-child{transform:translateY(3.25px) rotate(45deg)}
-.site-header.nav-open .nav-toggle span:last-child{transform:translateY(-3.25px) rotate(-45deg)}
+.nav-toggle span{
+  display:block;width:18px;height:1.5px;background:var(--ink);
+  transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .2s
+}
+/* Hamburguesa -> aspa */
+.site-header.nav-open .nav-toggle span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.site-header.nav-open .nav-toggle span:nth-child(2){opacity:0}
+.site-header.nav-open .nav-toggle span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
 
 /* ═══════════════════════════════════════════════════════════
    TICKER — marquesina continua sin salto
@@ -873,4 +900,84 @@ button{font:inherit;color:inherit}
      apretamos también el selector para que no empuje al logo. */
   .locale-switch a{padding:6px 7px}
   .header-actions{gap:4px}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PASADA DE MÓVIL
+   Ritmo vertical consistente y orden lógico de las secciones:
+   en móvil se lee primero el título, luego el texto y al final
+   la imagen. Este bloque va al final a propósito: es el que manda.
+   ═══════════════════════════════════════════════════════════ */
+:root{ --section-y:110px }
+
+@media(max-width:900px){
+  /* ── DÍPTICO: texto primero, luego las dos fotos ──
+     display:contents desarma la columna para poder ordenar sus
+     hijos junto al resto. */
+  .diptych{display:flex;flex-direction:column;gap:30px}
+  .diptych-col{display:contents}
+  .diptych-copy{order:1;margin-bottom:4px}
+  .diptych-tall{order:2}
+  .diptych-col .diptych-figure{order:3}
+}
+
+@media(max-width:768px){
+  :root{ --section-y:64px }
+
+  /* El header se queda fijo arriba y por encima del contenido. */
+  .site-header{z-index:12}
+
+  /* ── Ritmo vertical unificado ── */
+  .statement-block,
+  .phrase-index,
+  .diptych,
+  .shop-callout,
+  .product-related,
+  .values,
+  .faq-section{padding-top:var(--section-y);padding-bottom:var(--section-y)}
+  .art-wall{padding:var(--section-y) 0}
+  .reels-section{padding:var(--section-y) 0;margin-top:0}
+  .gallery-page{padding-top:40px;padding-bottom:var(--section-y)}
+  .about-layout,.contact-layout{padding-bottom:var(--section-y)}
+  .page-intro{padding-top:52px;padding-bottom:26px}
+
+  /* ── SHOP: texto antes que foto ── */
+  .shop-callout{display:flex;flex-direction:column;gap:26px;text-align:left}
+  .shop-callout>div:last-child{text-align:left}
+  .shop-portrait{order:2}
+  .shop-callout .shop-portrait{height:340px}
+  .shop-callout h2{font-size:clamp(38px,10vw,60px)}
+  .shop-callout p:not(.eyebrow){margin-left:0;margin-right:0}
+
+  /* ── Tipografía de titulares, más contenida ── */
+  .phrase-index-head h2,
+  .diptych-copy h2{font-size:clamp(34px,9vw,52px)}
+  .statement-copy{font-size:17px;line-height:1.4}
+  .about-manifesto-quote{font-size:clamp(19px,5.2vw,26px)}
+
+  /* ── El vídeo ocupaba media pantalla sin dejar leer el texto ── */
+  .studio-film{height:auto;min-height:74svh;display:grid}
+  .studio-film video{position:absolute;inset:0}
+  .film-overlay{position:relative;top:auto;left:auto;z-index:2;
+    padding:var(--section-y) var(--gutter) 84px;max-width:none}
+  .film-overlay h2{font-size:clamp(38px,11vw,62px);margin:12px 0 26px}
+  .film-controls{bottom:20px}
+
+  /* ── Banda panorámica: en vertical la foto pierde el sujeto ── */
+  .wide-band{height:auto;aspect-ratio:4/3;min-height:0}
+
+  /* ── Carrusel: la tarjeta cabe entera con el gutter a la vista ── */
+  .carousel-card{flex:0 0 calc(100vw - var(--gutter) * 2 - 34px)}
+
+  /* ── Galería en dos columnas: los metadatos se apelmazaban ── */
+  .new-work-title{font-size:12px;line-height:1.35}
+  .new-work-price,.new-work-artist{font-size:10.5px}
+  .meta-row{gap:8px}
+}
+
+@media(max-width:500px){
+  /* Una sola columna: ya hay sitio para texto legible. */
+  .new-work-title{font-size:14px}
+  .new-work-price,.new-work-artist{font-size:12px}
+  .carousel-card{flex:0 0 calc(100vw - var(--gutter) * 2 - 18px)}
 }

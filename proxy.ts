@@ -10,8 +10,22 @@ import { NextResponse, type NextRequest } from 'next/server'
 const LOCALES = ['es', 'en'] as const
 const DEFAULT_LOCALE = 'es'
 
+/* Cualquier cosa con extensión es un archivo de /public (logo.png,
+   art/*.webp, favicon.ico…). La exclusión se hace AQUÍ y no sólo en
+   el matcher: el patrón de extensión del matcher no llegaba a aplicarse
+   y acabábamos redirigiendo /logo.png a /es/logo.png, con lo que el
+   optimizador de imágenes recibía un 307 en vez de un PNG y devolvía
+   400. Resultado: el logo desaparecía del header y del footer. */
+const HAS_EXTENSION = /\.[a-z0-9]+$/i
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  if (
+    HAS_EXTENSION.test(pathname) ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api')
+  ) return
 
   const hasLocale = LOCALES.some(l => pathname === `/${l}` || pathname.startsWith(`/${l}/`))
   if (hasLocale) return
@@ -33,6 +47,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  /* Deja fuera assets, imágenes e internos de Next. */
-  matcher: ['/((?!_next|api|art|favicon|.*\.[\w]+$).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

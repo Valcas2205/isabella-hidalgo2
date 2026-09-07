@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { ShoppingBag, X, Minus, Plus, Trash2, ArrowUpRight } from 'lucide-react'
-import { useState, createContext, useContext, useCallback } from 'react'
+import { useState, createContext, useContext, useCallback, useEffect } from 'react'
 import { works, type Work } from '@/lib/works'
 import { useI18n, LocaleLink, LocaleSwitcher } from '@/components/i18n-provider'
 
@@ -115,6 +115,27 @@ export function Header() {
   const count = items.reduce((n, i) => n + i.qty, 0)
   const close = () => setNavOpen(false)
 
+  /* Con el menú a pantalla completa abierto, bloqueamos el scroll del
+     fondo y dejamos que Escape lo cierre. */
+  useEffect(() => {
+    if (!navOpen) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setNavOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [navOpen])
+
+  const links: [string, string][] = [
+    ['/', t.nav.home],
+    ['/about', t.nav.about],
+    ['/gallery', t.nav.gallery],
+    ['/contact', t.nav.contact],
+  ]
+
   return (
     <header className={`site-header${navOpen ? ' nav-open' : ''}`}>
       <Container>
@@ -123,14 +144,20 @@ export function Header() {
         </LocaleLink>
 
         <nav aria-label="Main navigation" id="main-nav">
-          <LocaleLink href="/" onClick={close}>{t.nav.home}</LocaleLink>
-          <LocaleLink href="/about" onClick={close}>{t.nav.about}</LocaleLink>
-          <LocaleLink href="/gallery" onClick={close}>{t.nav.gallery}</LocaleLink>
-          <LocaleLink href="/contact" onClick={close}>{t.nav.contact}</LocaleLink>
+          <div className="nav-links">
+            {links.map(([href, label]) => (
+              <LocaleLink key={href} href={href} onClick={close}>{label}</LocaleLink>
+            ))}
+          </div>
+          {/* En móvil el selector de idioma vive dentro del menú, para
+              no apretar la cabecera. */}
+          <div className="nav-drawer-foot">
+            <LocaleSwitcher />
+          </div>
         </nav>
 
         <div className="header-actions">
-          <LocaleSwitcher />
+          <div className="locale-desktop"><LocaleSwitcher /></div>
 
           <button className="bag-button" onClick={openCart} aria-label={t.nav.openBag}>
             <ShoppingBag size={18}/>
@@ -146,7 +173,7 @@ export function Header() {
             aria-controls="main-nav"
             aria-label={navOpen ? t.nav.closeMenu : t.nav.openMenu}
           >
-            <span/><span/>
+            <span/><span/><span/>
           </button>
         </div>
       </Container>
