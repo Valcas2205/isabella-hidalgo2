@@ -175,10 +175,10 @@ button{font:inherit;color:inherit}
 .reel-card:hover{transform:scale(1.02)}
 .reel-img{position:relative;height:420px;overflow:hidden;background:#1c2e45}
 /* living-photo animation on the inner wrapper */
-.reel-img-inner{position:absolute;inset:0;transform:scale(1.08);animation:reel-breathe 8s ease-in-out infinite alternate}
+.reel-img-inner{position:absolute;inset:0;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
 .reel-img-inner img{object-fit:cover;filter:saturate(.85)}
-.reel-card:hover .reel-img-inner{animation-play-state:paused;filter:saturate(1)}
-@keyframes reel-breathe{from{transform:scale(1.0)}to{transform:scale(1.1)}}
+.reel-card:hover .reel-img-inner{transform:scale(1.06)}
+
 .reel-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#16284640;opacity:0;transition:opacity .4s}
 .reel-card:hover .reel-play{opacity:1}
 .reel-play-ring{width:64px;height:64px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:20px;color:#fff;padding-left:4px}
@@ -483,7 +483,6 @@ button{font:inherit;color:inherit}
   .reels-ig-link{align-self:flex-start}
   .reels-grid{grid-template-columns:repeat(2,1fr);gap:12px}
   .reel-img{height:220px}
-  .reel-img-inner{transform:scale(1.02)}
   .reel-play-ring{width:44px;height:44px;font-size:14px}
   .reel-tag{top:8px;left:8px;font-size:8px;padding:3px 7px}
   .reel-dur{bottom:8px;right:8px;font-size:9px;padding:2px 6px}
