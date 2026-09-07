@@ -44,7 +44,11 @@ export default function Reveal({
           }
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+      /* threshold 0 y un margen inferior pequeño: se dispara en cuanto
+         el borde superior asoma. Con 0.12 una imagen alta tenía que
+         entrar mucho para aparecer, y mientras tanto se veía un hueco
+         en blanco debajo del texto. */
+      { threshold: 0, rootMargin: '0px 0px -40px 0px' },
     )
 
     io.observe(el)
