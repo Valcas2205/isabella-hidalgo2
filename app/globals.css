@@ -27,7 +27,7 @@
      aunque el elemento no viva dentro de un .section-shell. */
   --edge:max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter)));
 }
-@media(max-width:768px){:root{--gutter:22px;--header-h:76px}}
+@media(max-width:768px){:root{--gutter:22px;--header-h:86px}}
 @media(min-width:1440px){:root{--gutter:64px}}
 *{box-sizing:border-box}
 html{background:var(--background);scroll-behavior:smooth}
@@ -315,7 +315,7 @@ button{font:inherit;color:inherit}
   .site-header{position:sticky;top:0}
   .site-header .section-shell{gap:14px}
   .brand{width:auto;height:100%;display:flex;align-items:center;flex-shrink:0}
-  .brand img{width:auto;height:50px;object-fit:contain;object-position:left}
+  .brand img{width:auto;height:60px;object-fit:contain;object-position:left}
 
   .nav-toggle{display:flex}
   .locale-desktop{display:none}
@@ -374,7 +374,7 @@ button{font:inherit;color:inherit}
   .home-ticker i{font-size:12px}
 
   /* ── STATEMENT BLOCK ──
-     Orden en móvil: etiqueta (título) → texto → foto
+     Orden en móvil: etiqueta → foto → texto
      We use display:contents on statement-left to unwrap its children
      so CSS order can place label→portrait→copy
   */
@@ -387,8 +387,8 @@ button{font:inherit;color:inherit}
   }
   .statement-left{display:contents}
   .statement-label{order:1}
-  .statement-copy{order:2;font-size:18px;line-height:1.35}
-  .statement-portrait{order:3;width:100%;position:relative}
+  .statement-copy{order:3;font-size:18px;line-height:1.35}
+  .statement-portrait{order:2;width:100%;position:relative}
   .statement-portrait-frame{height:360px;width:100%}
   .statement-portrait-tag{bottom:14px;left:14px;padding:6px 12px;font-size:9px}
 
@@ -396,7 +396,7 @@ button{font:inherit;color:inherit}
   .art-wall{padding:55px 0 60px}
   .art-wall-top{flex-direction:column;align-items:flex-start;gap:0;padding-bottom:36px}
   .art-wall-top h2{font-size:clamp(42px,12vw,72px);margin:10px 0 0}
-  .circle-link{position:relative;right:auto;bottom:auto;width:90px;height:90px;font-size:10px;margin-top:20px;transform:none}
+  .circle-link{position:relative;right:auto;bottom:auto;width:118px;height:118px;font-size:9px;line-height:1.5;padding:14px;margin-top:24px;transform:none}
 
   /* ── CAROUSEL ── */
   .carousel-root{padding-bottom:32px}
@@ -920,7 +920,7 @@ button{font:inherit;color:inherit}
   /* ── DÍPTICO: texto primero, luego las dos fotos ──
      display:contents desarma la columna para poder ordenar sus
      hijos junto al resto. */
-  .diptych{display:flex;flex-direction:column;gap:30px}
+  .diptych{display:flex;flex-direction:column;align-items:stretch;gap:30px}
   .diptych-col{display:contents}
   .diptych-copy{order:1;margin-bottom:4px}
   .diptych-tall{order:2}
@@ -948,7 +948,7 @@ button{font:inherit;color:inherit}
   .page-intro{padding-top:52px;padding-bottom:26px}
 
   /* ── SHOP: texto antes que foto ── */
-  .shop-callout{display:flex;flex-direction:column;gap:26px;text-align:left}
+  .shop-callout{display:flex;flex-direction:column;align-items:stretch;gap:26px;text-align:left}
   .shop-callout>div:last-child{text-align:left}
   .shop-portrait{order:2}
   .shop-callout .shop-portrait{height:340px}

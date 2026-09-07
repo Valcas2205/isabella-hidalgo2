@@ -39,7 +39,9 @@ export default async function LocaleLayout({
   if (!isLocale(locale)) notFound()
 
   return (
-    <html lang={locale} className="bg-background">
+    /* data-scroll-behavior: lo pide Next al detectar scroll-behavior:smooth
+       en <html>, para no aplicar el suavizado en los cambios de ruta. */
+    <html lang={locale} className="bg-background" data-scroll-behavior="smooth">
       <body className="antialiased">
         <I18nProvider locale={locale}>{children}</I18nProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
