@@ -279,16 +279,44 @@ button{font:inherit;color:inherit}
 /* ── MOBILE: ≤ 768px ── */
 @media(max-width:768px){
 
-  /* ── HEADER ── */
-  .site-header .section-shell{gap:24px}
+  /* ── HEADER MÓVIL: menú en drawer ──
+     Cuatro enlaces a 9px entre el logo y la bolsa quedaban ilegibles.
+     En móvil la navegación pasa a un panel desplegable. */
+  .site-header .section-shell{gap:16px}
   .brand{width:auto;height:100%;display:flex;align-items:center;flex-shrink:0}
-  .brand img{width:auto;height:60px;object-fit:contain;object-position:left}
-  nav{gap:16px;font-size:9px;letter-spacing:.1em}
-  nav a{padding:4px 0}
-  .bag-button{gap:6px;font-size:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:6px;position:relative}
+  .brand img{width:auto;height:52px;object-fit:contain;object-position:left}
+
+  .nav-toggle{display:flex}
+
+  .site-header nav{
+    position:absolute;left:0;right:0;top:100%;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;
+    gap:0;margin:0;padding:0 var(--gutter);
+    background:var(--background);border-bottom:1px solid var(--line);
+    /* Cerrado: colapsado y fuera del orden de tabulación visual */
+    display:grid;grid-template-rows:0fr;
+    opacity:0;visibility:hidden;
+    transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1),opacity .25s,visibility .38s;
+    box-shadow:0 18px 40px #16284614;
+  }
+  .site-header.nav-open nav{grid-template-rows:1fr;opacity:1;visibility:visible}
+  .site-header nav > *{min-height:0}
+  .site-header nav a{
+    font-size:13px;letter-spacing:.14em;padding:16px 0;
+    border-bottom:1px solid var(--line);overflow:hidden
+  }
+  .site-header nav a:last-child{border-bottom:0}
+  .site-header nav a::after{display:none}
+
+  .header-actions{gap:6px}
+  .bag-button{
+    gap:0;font-size:0;width:42px;height:42px;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--line);border-radius:8px;position:relative
+  }
   .bag-button svg{width:18px;height:18px}
   .bag-label{display:none}
-  .bag-count{position:absolute;top:-5px;right:-5px}
+  .bag-count{position:absolute;top:-6px;right:-6px}
 
   /* ── HERO ── */
   .hero-full{height:calc(100svh - var(--header-h));min-height:480px}
@@ -553,3 +581,271 @@ button{font:inherit;color:inherit}
 /* ── SHOP CALLOUT: alto del retrato (antes venía inline en page.tsx) ── */
 .shop-callout .shop-portrait{height:520px}
 @media(max-width:768px){.shop-callout .shop-portrait{height:360px}}
+
+/* ═══════════════════════════════════════════════════════════
+   REVEAL — aparición al entrar en viewport (components/reveal.tsx)
+   ═══════════════════════════════════════════════════════════ */
+.reveal{opacity:0;transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);will-change:opacity,transform}
+.reveal-up{transform:translateY(28px)}
+.reveal-left{transform:translateX(-32px)}
+.reveal-right{transform:translateX(32px)}
+.reveal-scale{transform:scale(.96)}
+.reveal-fade{transform:none}
+.reveal.is-in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER — acciones y botón de menú
+   ═══════════════════════════════════════════════════════════ */
+.header-actions{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.nav-toggle{
+  display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:8px;
+  background:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0
+}
+.nav-toggle span{display:block;width:17px;height:1.5px;background:var(--ink);transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .2s}
+.site-header.nav-open .nav-toggle span:first-child{transform:translateY(3.25px) rotate(45deg)}
+.site-header.nav-open .nav-toggle span:last-child{transform:translateY(-3.25px) rotate(-45deg)}
+
+/* ═══════════════════════════════════════════════════════════
+   TICKER — marquesina continua sin salto
+   ═══════════════════════════════════════════════════════════ */
+.home-ticker{
+  display:flex;overflow:hidden;white-space:nowrap;
+  background:var(--blue);color:#fff;padding:13px 0;
+  font:11px Arial,sans-serif;letter-spacing:.18em;animation:none
+}
+.ticker-run{
+  display:inline-flex;align-items:center;gap:28px;padding-right:28px;
+  flex:0 0 auto;animation:ticker 30s linear infinite
+}
+.ticker-run i{font-style:normal;font-size:15px;line-height:1;opacity:.7}
+@keyframes ticker{to{transform:translateX(-100%)}}
+@media(prefers-reduced-motion:reduce){.ticker-run{animation:none}}
+
+/* ═══════════════════════════════════════════════════════════
+   ÍNDICE DE FRASES — el texto pintado de cada obra como índice
+   ═══════════════════════════════════════════════════════════ */
+.phrase-index{padding:110px 0 120px;border-top:1px solid var(--line)}
+.phrase-index-head{margin-bottom:56px}
+.phrase-index-head h2{font:clamp(44px,6.5vw,92px) Georgia,serif;line-height:.88;letter-spacing:-.055em;margin:0;color:var(--ink)}
+.phrase-index-head h2 em{color:var(--blue);font-style:italic}
+.phrase-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.phrase-row{
+  display:grid;grid-template-columns:52px 1fr auto 28px;align-items:center;gap:24px;
+  padding:26px 0;border-bottom:1px solid var(--line);
+  transition:padding-left .4s cubic-bezier(.2,.8,.2,1),color .3s;position:relative
+}
+.phrase-row:hover{padding-left:22px;color:var(--blue)}
+.phrase-num{font:11px/1 Arial,sans-serif;letter-spacing:.14em;color:var(--muted)}
+.phrase-text{font:clamp(20px,2.6vw,38px) Georgia,serif;line-height:1.15;letter-spacing:-.025em}
+.phrase-meta{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.phrase-arrow{font-size:17px;opacity:0;transform:translate(-6px,6px);transition:all .4s cubic-bezier(.2,.8,.2,1)}
+.phrase-row:hover .phrase-arrow{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════════════════════
+   BANDA PANORÁMICA — imagen a todo el ancho
+   ═══════════════════════════════════════════════════════════ */
+.wide-band{position:relative;height:min(72vh,620px);overflow:hidden;background:var(--paper)}
+.wide-band img{animation:band-drift 22s ease-in-out infinite alternate}
+.wide-band-caption{
+  position:absolute;left:var(--edge);right:var(--edge);bottom:26px;
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  text-shadow:0 1px 12px #00000060;border-top:1px solid #ffffff55;padding-top:14px
+}
+@keyframes band-drift{from{transform:scale(1.02)}to{transform:scale(1.1)}}
+@media(prefers-reduced-motion:reduce){.wide-band img{animation:none}}
+
+/* ═══════════════════════════════════════════════════════════
+   DÍPTICO EDITORIAL — dos imágenes desfasadas + texto
+   ═══════════════════════════════════════════════════════════ */
+.diptych{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:start;padding:120px 0}
+.diptych-figure{position:relative;overflow:hidden;margin:0;background:var(--paper);border-radius:2px}
+.diptych-figure img{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.diptych-figure:hover img{transform:scale(1.05)}
+.diptych-figure figcaption{
+  position:absolute;left:16px;bottom:16px;background:var(--background);
+  padding:7px 14px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)
+}
+.diptych-tall{aspect-ratio:4/5;margin-top:70px}
+.diptych-col{display:flex;flex-direction:column;gap:44px}
+.diptych-col .diptych-figure{aspect-ratio:4/5}
+.diptych-copy h2{font:clamp(34px,4.4vw,64px) Georgia,serif;line-height:.98;letter-spacing:-.05em;margin:0 0 22px;color:var(--ink)}
+.diptych-copy h2 em{color:var(--blue);font-style:italic}
+.diptych-copy p:not(.eyebrow){color:var(--muted);font-size:16px;line-height:1.65;margin:0 0 26px;max-width:430px}
+
+/* ═══════════════════════════════════════════════════════════
+   GALERÍA — cabecera y barra de filtros
+   ═══════════════════════════════════════════════════════════ */
+.gallery-page{padding-top:70px;padding-bottom:120px}
+.gallery-hero{margin-bottom:52px}
+.gallery-hero h1{font:clamp(44px,7vw,104px) Georgia,serif;line-height:.86;letter-spacing:-.06em;margin:0 0 26px;color:var(--ink)}
+.gallery-hero h1 em{color:var(--blue);font-style:italic}
+.gallery-hero-lede{font:19px/1.55 Georgia,serif;color:var(--muted);max-width:520px;margin:0}
+.gallery-bar{
+  display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:16px 0;margin-bottom:48px
+}
+.gallery-filters{display:flex;gap:10px;flex-wrap:wrap}
+.gallery-filters button{
+  border:1px solid var(--line);background:none;cursor:pointer;border-radius:999px;
+  padding:9px 18px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);transition:all .25s
+}
+.gallery-filters button:hover{color:var(--ink);border-color:var(--ink)}
+.gallery-filters button.is-active{background:var(--ink);border-color:var(--ink);color:#fff}
+.gallery-sortwrap{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.gallery-empty{color:var(--muted);padding:60px 0;text-align:center}
+.gallery-grid-new{display:grid;grid-template-columns:repeat(3,1fr);gap:50px 30px;margin-bottom:0}
+.new-work-image{position:relative;aspect-ratio:4/5;width:100%;background:var(--paper);margin-bottom:16px;display:block;overflow:hidden;border-radius:2px}
+.new-work-image img{transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.new-work-card:hover .new-work-image img{transform:scale(1.05)}
+.new-work-title a:hover{color:var(--blue)}
+
+/* ═══════════════════════════════════════════════════════════
+   PÁGINA DE OBRA
+   ═══════════════════════════════════════════════════════════ */
+.product{padding-top:34px;padding-bottom:100px}
+.product-back{
+  display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:34px;transition:color .25s
+}
+.product-back:hover{color:var(--blue)}
+.product-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:5vw;align-items:start}
+
+.product-media{position:sticky;top:34px}
+.product-shot{position:relative;aspect-ratio:4/5;background:var(--paper);overflow:hidden;border-radius:2px}
+.product-shot img{animation:fadeIn .5s ease}
+.product-thumbs{display:flex;gap:12px;margin-top:12px}
+.product-thumb{
+  position:relative;width:88px;aspect-ratio:1;border:1px solid var(--line);background:var(--paper);
+  cursor:pointer;padding:0;overflow:hidden;border-radius:2px;transition:border-color .25s,transform .25s
+}
+.product-thumb:hover{transform:translateY(-3px)}
+.product-thumb.is-active{border-color:var(--blue);border-width:2px}
+
+.product-info{padding-top:4px}
+.product-title{font:clamp(36px,4.4vw,62px) Georgia,serif;line-height:.98;letter-spacing:-.045em;margin:0 0 18px;color:var(--ink)}
+.product-quote{font:italic 19px/1.45 Georgia,serif;color:var(--blue);margin:0 0 28px;max-width:420px}
+.product-price-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:30px}
+.product-price{font:26px Georgia,serif;color:var(--ink)}
+.product-tag-sold,.product-tag-donation{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;border-radius:999px
+}
+.product-tag-sold{background:var(--ink);color:#fff}
+.product-tag-donation{background:var(--green);color:var(--ink)}
+
+.product-specs{margin:0 0 32px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;gap:12px}
+.product-specs > div{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:baseline}
+.product-specs dt{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.product-specs dd{margin:0;font-size:14px;color:var(--ink)}
+
+.product-option{margin-bottom:26px}
+.product-option-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.product-choices{display:flex;gap:10px;flex-wrap:wrap}
+.product-choices button{
+  border:1px solid var(--line);background:none;cursor:pointer;padding:12px 18px;
+  font-size:12px;color:var(--ink);border-radius:2px;transition:all .25s
+}
+.product-choices button:hover{border-color:var(--ink)}
+.product-choices button.is-active{border-color:var(--blue);border-width:2px;color:var(--blue);font-weight:600}
+
+.product-buy{display:flex;gap:12px;align-items:stretch;margin-bottom:34px;flex-wrap:wrap}
+.product-qty{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:2px;padding:4px}
+.product-qty button{
+  width:38px;height:38px;border:0;background:none;cursor:pointer;display:grid;place-items:center;
+  color:var(--ink);border-radius:2px;transition:background .2s
+}
+.product-qty button:hover{background:var(--paper)}
+.product-qty span{min-width:30px;text-align:center;font-size:15px;font-weight:600}
+.product-add{
+  flex:1;min-width:220px;border:2px solid var(--blue);background:var(--blue);color:#fff;
+  padding:16px 26px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  cursor:pointer;border-radius:2px;transition:all .3s cubic-bezier(.2,.8,.2,1);text-align:center
+}
+.product-add:hover{background:var(--ink);border-color:var(--ink);transform:translateY(-2px);box-shadow:0 12px 28px #0b5cfc2e}
+.product-add-muted{background:none;color:var(--ink);border-color:var(--ink);display:grid;place-items:center}
+.product-add-muted:hover{background:var(--ink);color:#fff}
+
+.product-story{color:var(--muted);font-size:15px;line-height:1.7;margin:0 0 34px}
+.product-panels{border-top:1px solid var(--line)}
+.product-panel{border-bottom:1px solid var(--line)}
+.product-panel button{
+  width:100%;padding:18px 0;border:0;background:none;cursor:pointer;display:flex;
+  justify-content:space-between;align-items:center;text-align:left;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)
+}
+.product-panel-sign{font-size:17px;color:var(--blue)}
+.product-panel p{margin:0;padding:0 30px 20px 0;color:var(--muted);font-size:14px;line-height:1.7;animation:slideUp .3s ease}
+
+.product-related{padding-top:80px;padding-bottom:110px;border-top:1px solid var(--line)}
+.product-related-head{margin-bottom:40px}
+.product-related-head h2{font:clamp(30px,3.6vw,50px) Georgia,serif;letter-spacing:-.04em;margin:0;color:var(--ink)}
+
+/* ═══════════════════════════════════════════════════════════
+   CARRITO — fondo y pie
+   ═══════════════════════════════════════════════════════════ */
+.cart-backdrop{position:fixed;inset:0;z-index:19;background:#16284638;animation:fadeIn .3s ease}
+.cart-foot{padding:0 35px 30px;border-top:1px solid var(--line);background:var(--background)}
+.cart-item-img{display:block}
+.cart-item-title{transition:color .25s}
+.cart-item-info a:hover .cart-item-title{color:var(--blue)}
+.carousel-sold{position:absolute;top:14px;right:14px;background:#162846cc;color:#fff;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px}
+.carousel-meta h3 a:hover{color:var(--blue)}
+
+/* ── FOOTER ── */
+.footer-brand{display:flex;align-items:center;gap:18px}
+.footer-social a{display:inline-flex;align-items:center;gap:4px}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE de lo nuevo
+   ═══════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .product-layout{grid-template-columns:1fr;gap:40px}
+  .product-media{position:static}
+  .gallery-grid-new{grid-template-columns:repeat(2,1fr);gap:36px 20px}
+  .diptych{grid-template-columns:1fr;gap:40px;padding:80px 0}
+  .diptych-tall{margin-top:0}
+}
+@media(max-width:768px){
+  .phrase-index{padding:70px 0 76px}
+  .phrase-index-head{margin-bottom:34px}
+  .phrase-row{grid-template-columns:34px 1fr;gap:12px;padding:20px 0}
+  .phrase-row:hover{padding-left:0}
+  .phrase-meta,.phrase-arrow{display:none}
+  .phrase-text{font-size:19px}
+
+  .wide-band{height:52vh;min-height:320px}
+  .wide-band-caption{bottom:18px;font-size:9px;gap:8px}
+
+  .diptych{padding:60px 0;gap:32px}
+  .diptych-col{gap:32px}
+
+  .gallery-page{padding-top:44px;padding-bottom:70px}
+  .gallery-hero{margin-bottom:32px}
+  .gallery-hero-lede{font-size:16px}
+  .gallery-bar{margin-bottom:30px;padding:14px 0}
+  .gallery-filters button{padding:8px 14px;font-size:10px}
+  .gallery-grid-new{grid-template-columns:repeat(2,1fr);gap:26px 14px}
+
+  .product{padding-top:20px;padding-bottom:70px}
+  .product-back{margin-bottom:22px}
+  .product-title{font-size:clamp(30px,8vw,42px)}
+  .product-quote{font-size:16px;margin-bottom:22px}
+  .product-price{font-size:22px}
+  .product-thumb{width:66px}
+  .product-specs > div{grid-template-columns:92px 1fr;gap:12px}
+  .product-add{min-width:0;padding:15px 18px;font-size:10px}
+  .product-related{padding-top:56px;padding-bottom:70px}
+
+  .cart-foot{padding:0 20px 22px}
+  .footer-brand{flex-direction:column;gap:12px;text-align:center}
+}
+@media(max-width:500px){
+  .gallery-grid-new{grid-template-columns:1fr;gap:34px}
+  .product-buy{flex-direction:column}
+  .product-qty{justify-content:center}
+}

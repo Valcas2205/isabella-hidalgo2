@@ -4,25 +4,25 @@ import { Shell, PageIntro, aboutPhoto } from '@/components/site-chrome'
 
 const reels = [
   {
-    cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/arte1-xJIZdCPClUJgazcWHQp1iVzsEwfSVD.avif',
+    cover: '/art/rhythm-of-intuition.webp',
     label: 'Studio process — oil on canvas',
     tag: 'PROCESS',
     duration: '0:38',
   },
   {
-    cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/arte2-eE4D4WP1mQkge6l5E6iyH9GIGygMV4.avif',
+    cover: '/art/painted-hand.webp',
     label: 'Colour mixing — quiet palette',
     tag: 'COLOUR',
     duration: '0:52',
   },
   {
-    cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/arte3-EMEskmNVzkVqXiQaoXKTwXQ6Zn51mc.avif',
+    cover: '/art/canvas-stack.webp',
     label: 'Light study — linen texture',
     tag: 'LIGHT',
     duration: '1:04',
   },
   {
-    cover: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Fotoform-LYPAsLMfHFc3TXxw78iBOesyz0YcCd.avif',
+    cover: '/art/studio-frames.webp',
     label: 'A morning in the studio',
     tag: 'STUDIO',
     duration: '0:44',

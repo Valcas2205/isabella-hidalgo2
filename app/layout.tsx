@@ -3,9 +3,12 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Isabella Hidalgo — Fine Artist',
-  description: 'Contemporary paintings exploring colour, perception, memory and the quiet beauty of everyday life.',
-  generator: 'v0.app',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://isabellahidalgo.com'),
+  title: {
+    default: 'Isabella Hidalgo — Fine Artist',
+    template: '%s',
+  },
+  description: 'Pintura contemporánea sobre el color, la percepción, la memoria y la belleza silenciosa de lo cotidiano.',
 }
 
 export const viewport: Viewport = { colorScheme: 'light', themeColor: '#f5f3ee' }
