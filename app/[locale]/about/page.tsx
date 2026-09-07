@@ -2,10 +2,27 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Shell, PageIntro, Container, aboutPhoto } from '@/components/site-chrome'
 import Reveal from '@/components/reveal'
+import ReelVideo from '@/components/reel-video'
 import { photos } from '@/lib/works'
 import { getDict, isLocale, defaultLocale } from '@/lib/i18n'
 
-const covers = [photos.paintedHand, photos.canvasStack, photos.studioFrames, photos.prismHand]
+/* ── Reels ──
+   `cover` es la imagen fija; `video` es opcional. En cuanto una entrada
+   tenga un .mp4 propio (por ejemplo '/reels/proceso.mp4'), esa tarjeta
+   pasa sola a reproducirse muda y en bucle mientras esté en pantalla.
+   Mientras no lo tenga, se muestra la foto con el botón de play, que
+   lleva a Instagram.
+
+   No se puede autoreproducir un vídeo alojado en Instagram: su embed
+   oficial no lo permite y enlazar a los archivos de su CDN no está
+   permitido, además de que esas URLs caducan. Hay que exportar el reel
+   y servir el .mp4 desde aquí. */
+const media: { cover: string; video?: string }[] = [
+  { cover: photos.paintedHand },
+  { cover: photos.canvasStack },
+  { cover: photos.studioFrames },
+  { cover: photos.prismHand },
+]
 
 export default async function About({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params
@@ -64,12 +81,19 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               className="reel-card"
             >
               <div className="reel-img">
-                <div className="reel-img-inner">
-                  <Image src={covers[i]} alt={reel.label} fill sizes="(max-width:768px) 45vw, 22vw" style={{ objectFit: 'cover' }}/>
-                </div>
+                {media[i].video ? (
+                  <ReelVideo src={media[i].video!} poster={media[i].cover} label={reel.label} />
+                ) : (
+                  <div className="reel-img-inner">
+                    <Image src={media[i].cover} alt={reel.label} fill sizes="(max-width:768px) 45vw, 22vw" style={{ objectFit: 'cover' }}/>
+                  </div>
+                )}
+                {/* El overlay se mantiene en ambos casos: toda la tarjeta
+                    es un enlace a Instagram. */}
                 <div className="reel-play"><span className="reel-play-ring">▶</span></div>
                 <span className="reel-tag">{reel.tag}</span>
-                <span className="reel-dur">{reel.duration}</span>
+                {/* La duración sólo tiene sentido si hay vídeo detrás. */}
+                {media[i].video && <span className="reel-dur">{reel.duration}</span>}
               </div>
               <p className="reel-label">{reel.label}</p>
             </a>
