@@ -61,8 +61,8 @@ export default function Home() { return <Shell>
   </section>
 
   <section className="studio-film"><div className="film-overlay"><p className="eyebrow">A moving image of the practice</p><h2>Make room<br/><em>for wonder.</em></h2><Link href="/about" className="button-link button-film">Enter the studio ↗</Link></div><video src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/file-YwQlDrLYxsD6PxOQHo8EPDP0PWg3Hk.mp4" autoPlay muted loop playsInline aria-label="Isabella Hidalgo working in her studio"/><div className="film-controls"><span>TO GROW STUDIO</span><span>PLAYING · 00:24</span></div></section>
-  <section className="shop-callout section-shell" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5vw', alignItems: 'center' }}>
-    <div className="portrait-frame" style={{ height: '500px' }}>
+  <section className="shop-callout section-shell">
+    <div className="portrait-frame shop-portrait">
       <Image src="/DSC_0177.JPG" alt="Studio details" fill sizes="(max-width: 768px) 100vw, 50vw" />
     </div>
     <div>

@@ -8,6 +8,19 @@ import { useState, createContext, useContext, useCallback } from 'react'
 /* ── Constants ── */
 const logo = '/logo.png'
 
+/* ── Container ──
+   El único primitivo de layout de la página. Header, footer y cada
+   sección lo usan como div padre, así todo comparte el mismo borde
+   izquierdo y derecho. El ancho y el gutter viven en globals.css
+   (--page-max / --gutter), no aquí. */
+export function Container({ as: Tag = 'div', className = '', children, ...rest }: {
+  as?: React.ElementType
+  className?: string
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLElement>) {
+  return <Tag className={`section-shell ${className}`.trim()} {...rest}>{children}</Tag>
+}
+
 /* ── Works data (Spring 2026 catalogue) ── */
 export type WorkData = {
   src: string
@@ -145,20 +158,22 @@ export function Header() {
   const { items, openCart } = useContext(CartContext)
   return (
     <header className="site-header">
-      <Link href="/" className="brand" aria-label="Isabella Hidalgo home">
-        <Image src={logo} alt="Isabella Hidalgo Fine Art" width={140} height={160} priority />
-      </Link>
-      <nav aria-label="Main navigation">
-        <Link href="/">Home</Link>
-        <Link href="/about">About</Link>
-        <Link href="/gallery">Gallery</Link>
-        <Link href="/contact">Contact</Link>
-      </nav>
-      <button className="bag-button" onClick={openCart} aria-label="Open collection bag">
-        <ShoppingBag size={18}/>
-        <span className="bag-label">Bag</span>
-        {items.length > 0 && <span className="bag-count">{items.length}</span>}
-      </button>
+      <Container>
+        <Link href="/" className="brand" aria-label="Isabella Hidalgo home">
+          <Image src={logo} alt="Isabella Hidalgo Fine Art" width={140} height={160} priority />
+        </Link>
+        <nav aria-label="Main navigation">
+          <Link href="/">Home</Link>
+          <Link href="/about">About</Link>
+          <Link href="/gallery">Gallery</Link>
+          <Link href="/contact">Contact</Link>
+        </nav>
+        <button className="bag-button" onClick={openCart} aria-label="Open collection bag">
+          <ShoppingBag size={18}/>
+          <span className="bag-label">Bag</span>
+          {items.length > 0 && <span className="bag-count">{items.length}</span>}
+        </button>
+      </Container>
     </header>
   )
 }
@@ -239,16 +254,18 @@ export function PageIntro({ eyebrow, title, children }: { eyebrow: string; title
 export function Footer() {
   return (
     <footer className="site-footer">
-      <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={80} style={{ objectFit: 'contain' }}/>
-      <div>
-        <p>Isabella Hidalgo Fine Art</p>
-        <p>To Grow Studio · Spain</p>
-      </div>
-      <div className="footer-social">
-        <a href="https://www.instagram.com/isabellahidalgo" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="mailto:hola@isabellahidalgo.com">Email</a>
-      </div>
-      <p>© 2026</p>
+      <Container>
+        <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={80} style={{ objectFit: 'contain' }}/>
+        <div>
+          <p>Isabella Hidalgo Fine Art</p>
+          <p>To Grow Studio · Spain</p>
+        </div>
+        <div className="footer-social">
+          <a href="https://www.instagram.com/isabellahidalgo" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="mailto:hola@isabellahidalgo.com">Email</a>
+        </div>
+        <p>© 2026</p>
+      </Container>
     </footer>
   )
 }

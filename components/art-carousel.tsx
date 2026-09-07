@@ -30,13 +30,17 @@ export default function ArtCarousel({ works }: { works: WorkData[] }) {
 
   const handleScroll = () => {
     if (!trackRef.current) return
-    const index = Math.round(trackRef.current.scrollLeft / 364)
+    const card = trackRef.current.querySelector('.carousel-card') as HTMLElement | null
+    const cardWidth = card ? card.offsetWidth + 16 : 364 // 16 = gap
+    const index = Math.round(trackRef.current.scrollLeft / cardWidth)
     setActive(index)
   }
 
   const scrollTo = (i: number) => {
     if (!trackRef.current) return
-    trackRef.current.scrollTo({ left: i * 364, behavior: 'smooth' })
+    const card = trackRef.current.querySelector('.carousel-card') as HTMLElement | null
+    const cardWidth = card ? card.offsetWidth + 16 : 364
+    trackRef.current.scrollTo({ left: i * cardWidth, behavior: 'smooth' })
     setActive(i)
   }
 
