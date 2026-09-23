@@ -1,9 +1,21 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import { Space_Mono } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import { I18nProvider } from '@/components/i18n-provider'
 import { locales, isLocale, getDict } from '@/lib/i18n'
 import '../globals.css'
+
+/* Space Mono es la font de marca de Isabella: única familia para todo
+   el sitio (titulares y cuerpo), expuesta como variable CSS para que
+   globals.css la use vía var(--font-mono). */
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 /* `[locale]` va antes del layout raíz, así que este ES el layout raíz
    y es quien pinta <html>. Prerenderiza un árbol por idioma. */
@@ -41,7 +53,7 @@ export default async function LocaleLayout({
   return (
     /* data-scroll-behavior: lo pide Next al detectar scroll-behavior:smooth
        en <html>, para no aplicar el suavizado en los cambios de ruta. */
-    <html lang={locale} className="bg-background" data-scroll-behavior="smooth">
+    <html lang={locale} className={`bg-background ${spaceMono.variable}`} data-scroll-behavior="smooth">
       <body className="antialiased">
         <I18nProvider locale={locale}>{children}</I18nProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}

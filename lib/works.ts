@@ -156,6 +156,12 @@ export const photos = {
   prismHand: '/art/prism-hand.webp',
   paintedHand: '/art/painted-hand.webp',
   guidedWide: '/art/always-guided-wide.webp',
+  guidedMotion: '/art/always-guided-motion.webp',
   isabellaGuided: '/art/isabella-always-guided.webp',
   isabellaWisdom: '/art/isabella-inner-wisdom.webp',
+  rhythmDetail: '/art/rhythm-of-intuition.webp',
+  allThingsPass: '/art/all-things-pass.webp',
+  nothingToForce: '/art/nothing-to-force.webp',
+  /** "Grace and Purpose" ya colgada en la pared de quien la coleccionó. */
+  graceInHome: '/art/grace-and-purpose-home.webp',
 }

@@ -83,6 +83,71 @@ export default async function About({
         <span className="about-manifesto-line" />
       </Container>
 
+      {/* ── ESTUDIO EN MOSAICO ──
+          Dos columnas desfasadas con fotos de proceso + una cita, al
+          estilo the-place.co / philipschuerk.de: mucha foto, poco texto,
+          el desfase vertical hace el ritmo en vez de recortar la imagen. */}
+      <section className="studio-wall">
+        <Container className="studio-wall-head">
+          <p className="eyebrow">{t.about.studioWallEyebrow}</p>
+          <h2>
+            {t.about.studioWallTitle}
+            <br />
+            <em>{t.about.studioWallTitleEm}</em>
+          </h2>
+        </Container>
+
+        <Container className="studio-wall-grid">
+          {/* Ninguna de estas fotos se repite en el resto de la página:
+              las de estudio (bastidores, pila de lienzos, mano pintando,
+              luz prismática) ya cubren esa parte más abajo, en los reels. */}
+          <div className="studio-wall-col">
+            <Reveal as="figure" className="studio-wall-item" variant="up">
+              <div className="studio-wall-photo">
+                <Image src={photos.graceInHome} alt={t.about.studioWallCaptions[0]} width={900} height={1125} sizes="(max-width:768px) 100vw, 40vw" />
+              </div>
+              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[0]}</figcaption>
+            </Reveal>
+            <Reveal as="figure" className="studio-wall-item" variant="up" delay={80}>
+              <div className="studio-wall-photo">
+                <Image src={photos.allThingsPass} alt={t.about.studioWallCaptions[1]} width={900} height={1125} sizes="(max-width:768px) 100vw, 40vw" />
+              </div>
+              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[1]}</figcaption>
+            </Reveal>
+            <Reveal as="figure" className="studio-wall-item" variant="up" delay={160}>
+              <div className="studio-wall-photo">
+                <Image src={photos.isabellaWisdom} alt={t.about.studioWallCaptions[2]} width={900} height={1350} sizes="(max-width:768px) 100vw, 40vw" />
+              </div>
+              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[2]}</figcaption>
+            </Reveal>
+            <Reveal as="figure" className="studio-wall-item" variant="up" delay={240}>
+              <div className="studio-wall-photo">
+                <Image src={photos.nothingToForce} alt={t.about.studioWallCaptions[3]} width={900} height={1125} sizes="(max-width:768px) 100vw, 40vw" />
+              </div>
+              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[3]}</figcaption>
+            </Reveal>
+          </div>
+
+          <div className="studio-wall-col studio-wall-col-offset">
+            <Reveal as="figure" className="studio-wall-item" variant="up" delay={40}>
+              <div className="studio-wall-photo">
+                <Image src={photos.guidedMotion} alt={t.about.studioWallCaptions[4]} width={842} height={1264} sizes="(max-width:768px) 100vw, 40vw" />
+              </div>
+              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[4]}</figcaption>
+            </Reveal>
+            <Reveal className="studio-wall-quote-card" variant="scale" delay={120}>
+              <p>{t.about.studioWallQuote}</p>
+            </Reveal>
+            <Reveal as="figure" className="studio-wall-item" variant="up" delay={200}>
+              <div className="studio-wall-photo">
+                <Image src={photos.rhythmDetail} alt={t.about.studioWallCaptions[5]} width={900} height={1125} sizes="(max-width:768px) 100vw, 40vw" />
+              </div>
+              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[5]}</figcaption>
+            </Reveal>
+          </div>
+        </Container>
+      </section>
+
       {/* ── REELS ── */}
       <section className="reels-section">
         <Container className="reels-header">
