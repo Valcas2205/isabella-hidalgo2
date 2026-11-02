@@ -1,21 +1,59 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef, useState, useContext } from 'react'
-import { CartContext } from '@/components/site-chrome'
-import { useI18n, LocaleLink } from '@/components/i18n-provider'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { LocaleLink } from '@/components/i18n-provider'
 import type { Work } from '@/lib/works'
+
+/* Sólo la imagen y su título. Al pasar el cursor por encima se muestra la
+   segunda foto de la obra, con un fundido lento. En táctil no hay hover. */
+function CarouselItem({ work, moved }: { work: Work; moved: React.MutableRefObject<number> }) {
+  const [shot, setShot] = useState(0)
+  const [hover, setHover] = useState(false)
+
+  /* Foto predeterminada; al tocarla con el cursor pasa a la siguiente (una sola vez)
+     y al salir vuelve a la primera. */
+  useEffect(() => {
+    setShot(hover && work.images.length > 1 ? 1 : 0)
+  }, [hover, work.images.length])
+
+  return (
+    <article className={`carousel-card${hover ? ' is-hover' : ''}`}>
+      <LocaleLink
+        href={`/gallery/${work.slug}`}
+        className="carousel-img"
+        onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(true) }}
+        onPointerLeave={() => setHover(false)}
+        /* Si el usuario venía arrastrando, no navegamos. */
+        onClick={e => { if (moved.current > 6) e.preventDefault() }}
+      >
+        {work.images.map((src, i) => (
+          <Image
+            key={src}
+            src={src}
+            alt={i === 0 ? work.title : ''}
+            fill
+            sizes="(max-width: 768px) 80vw, 400px"
+            className={i === shot ? 'is-on' : ''}
+          />
+        ))}
+      </LocaleLink>
+      <h3 className="carousel-title">{work.title}</h3>
+    </article>
+  )
+}
 
 export default function ArtCarousel({ works }: { works: Work[] }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(0)
   const [dragging, setDragging] = useState(false)
+  const [canPrev, setCanPrev] = useState(false)
+  const [canNext, setCanNext] = useState(true)
   const startX = useRef(0)
   const scrollLeft = useRef(0)
   const moved = useRef(0)
 
-  const { add, items, openCart } = useContext(CartContext)
-  const { t } = useI18n()
 
   const handlePointerDown = (e: React.PointerEvent) => {
     setDragging(true)
@@ -42,10 +80,26 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
     return card.offsetWidth + gap
   }
 
+  const updateEdges = () => {
+    const el = trackRef.current
+    if (!el) return
+    setCanPrev(el.scrollLeft > 8)
+    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 8)
+  }
+
+  useEffect(() => {
+    updateEdges()
+    window.addEventListener('resize', updateEdges)
+    return () => window.removeEventListener('resize', updateEdges)
+  }, [])
+
   const handleScroll = () => {
     if (!trackRef.current) return
     setActive(Math.round(trackRef.current.scrollLeft / step()))
+    updateEdges()
   }
+
+  const nudge = (dir: 1 | -1) => trackRef.current?.scrollBy({ left: dir * step(), behavior: 'smooth' })
 
   const scrollTo = (i: number) => {
     trackRef.current?.scrollTo({ left: i * step(), behavior: 'smooth' })
@@ -63,55 +117,11 @@ export default function ArtCarousel({ works }: { works: Work[] }) {
         onPointerLeave={handlePointerUp}
         onScroll={handleScroll}
       >
-        {works.map((work, i) => {
-          const inCart = items.some(item => item.slug === work.slug)
-          return (
-            <article key={work.slug} className="carousel-card">
-              <LocaleLink
-                href={`/gallery/${work.slug}`}
-                className="carousel-img"
-                /* Si el usuario venía arrastrando, no navegamos. */
-                onClick={e => { if (moved.current > 6) e.preventDefault() }}
-              >
-                <Image
-                  src={work.images[0]}
-                  alt={work.title}
-                  fill
-                  sizes="(max-width: 768px) 80vw, 340px"
-                  style={{ objectFit: 'cover' }}
-                />
-                <span className="carousel-index">{(i + 1).toString().padStart(2, '0')}</span>
-                {!work.available && <span className="carousel-sold">{t.gallery.sold}</span>}
-              </LocaleLink>
-
-              <div className="carousel-meta">
-                <div>
-                  <h3><LocaleLink href={`/gallery/${work.slug}`}>{work.title}</LocaleLink></h3>
-                  <p>{work.size} · €{work.price.toLocaleString()}</p>
-                </div>
-                {work.available ? (
-                  <button
-                    className={`collect-btn ${inCart ? 'collected' : ''}`}
-                    onClick={() => { add(work); openCart() }}
-                    disabled={inCart}
-                  >
-                    {inCart ? '✓' : t.gallery.collect}
-                  </button>
-                ) : (
-                  <LocaleLink href={`/gallery/${work.slug}`} className="collect-btn collected">{t.gallery.view}</LocaleLink>
-                )}
-              </div>
-            </article>
-          )
-        })}
-
-        <div className="carousel-card carousel-cta-card">
-          <LocaleLink href="/gallery" className="carousel-cta-inner">
-            <span className="carousel-cta-ring">＋</span>
-            <p>{t.home.fullGallery}</p>
-          </LocaleLink>
-        </div>
+        {works.map(work => <CarouselItem key={work.slug} work={work} moved={moved} />)}
       </div>
+
+      <button className="carousel-arrow carousel-arrow-prev" onClick={() => nudge(-1)} hidden={!canPrev} aria-label="Anterior"><ChevronLeft size={18} strokeWidth={1.25}/></button>
+      <button className="carousel-arrow carousel-arrow-next" onClick={() => nudge(1)} hidden={!canNext} aria-label="Siguiente"><ChevronRight size={18} strokeWidth={1.25}/></button>
 
       <div className="carousel-dots">
         {works.map((w, i) => (

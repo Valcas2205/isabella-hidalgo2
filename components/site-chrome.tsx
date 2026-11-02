@@ -184,8 +184,9 @@ export function Header() {
 /* ─── WorkCard: tarjeta de galería ─── */
 export function WorkCard({ work, priority = false }: { work: Work; priority?: boolean }) {
   const { add, items, openCart } = useContext(CartContext)
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   if (!work) return null
+  const soon = work.price === 0
   const inCart = items.some(i => i.slug === work.slug)
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -201,12 +202,12 @@ export function WorkCard({ work, priority = false }: { work: Work; priority?: bo
           src={work.images[0]}
           alt={work.title}
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: soon ? 'cover' : 'contain' }}
           sizes="(max-width:500px) 100vw, (max-width:900px) 50vw, 33vw"
           priority={priority}
         />
         {work.donation && <span className="work-badge">{t.gallery.donation}</span>}
-        {!work.available && <span className="work-sold">{t.gallery.sold}</span>}
+        {!work.available && !soon && <span className="work-sold">{t.gallery.sold}</span>}
       </LocaleLink>
 
       <div className="new-work-meta">
@@ -214,7 +215,7 @@ export function WorkCard({ work, priority = false }: { work: Work; priority?: bo
           <h3 className="new-work-title">
             <LocaleLink href={`/gallery/${work.slug}`}>{work.title}</LocaleLink>
           </h3>
-          <span className="new-work-price">€{work.price.toLocaleString()}</span>
+          <span className="new-work-price">{soon ? (locale === 'es' ? 'Próximamente' : 'Coming soon') : `€${work.price.toLocaleString()}`}</span>
         </div>
         <div className="meta-row">
           <span className="new-work-artist">{work.size}</span>
@@ -269,18 +270,20 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <Container>
-        <div className="footer-brand">
-          <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={80} style={{ objectFit: 'contain' }}/>
-          <div>
-            <p>Isabella Hidalgo Fine Art</p>
-            <p>{t.footer.studio}</p>
+        <div className="footer-left">
+          <div className="footer-brand">
+            <Image src={logo} alt="Isabella Hidalgo Fine Art" width={80} height={80} style={{ objectFit: 'contain' }}/>
+            <div>
+              <p>Isabella Hidalgo Fine Art</p>
+              <p>{t.footer.studio}</p>
+            </div>
           </div>
-        </div>
-        <div className="footer-social">
-          <a href="https://www.instagram.com/isabellahidalgo" target="_blank" rel="noopener noreferrer">
-            {t.footer.instagram} <ArrowUpRight size={11}/>
-          </a>
-          <a href="mailto:hola@isabellahidalgo.com">{t.footer.email} <ArrowUpRight size={11}/></a>
+          <div className="footer-social">
+            <a href="https://www.instagram.com/isabellahidalgo" target="_blank" rel="noopener noreferrer">
+              {t.footer.instagram} <ArrowUpRight size={11}/>
+            </a>
+            <a href="mailto:hola@isabellahidalgo.com">{t.footer.email} <ArrowUpRight size={11}/></a>
+          </div>
         </div>
         <p>© 2026</p>
       </Container>

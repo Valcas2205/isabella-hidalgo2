@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Shell, Container, heroPhoto, wordmark } from '@/components/site-chrome'
+import HeroTrail from '@/components/hero-trail'
 import ArtCarousel from '@/components/art-carousel'
 import Reveal from '@/components/reveal'
 import { works, photos } from '@/lib/works'
@@ -14,28 +15,20 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return <Shell>
 
-    {/* ── HERO (sin cambios) ── */}
-    <section className="hero-full">
-      <Image src={heroPhoto} alt="Isabella Hidalgo" fill priority sizes="100vw"/>
-      <div className="hero-wordmark"><Image src={wordmark} alt="Isabella Hidalgo" width={355} height={148}/></div>
-      <span className="hero-note">{t.home.heroNote}</span>
-    </section>
+    {/* ── HERO: foto pequeña al centro, rastro de obras con el cursor y
+        obras que aparecen al hacer scroll ── */}
+    <HeroTrail
+      photo={heroPhoto}
+      wordmark={wordmark}
+      note={t.home.heroNote}
+      images={['all-things-pass','hand-rainbow','grace-framed','mistakes','rainbow-face','instant-framed','intuition-hanging','sky','hand-pink','pause','grace-hanging','instant-hanging','canvas-stack','grace-prints','intuition-floor','grace-mockup'].map(n => `/hero/${n}.webp`)}
+    />
 
-    <div className="home-ticker">
-      {Array.from({ length: 3 }, (_, i) => (
-        <span className="ticker-run" key={i} aria-hidden={i > 0}>
-          {t.home.ticker.map(word => (
-            <span key={word}>{word}<i>✦</i></span>
-          ))}
-        </span>
-      ))}
-    </div>
 
     {/* ── DECLARACIÓN + RETRATO ── */}
     <Container as="section" className="statement-block">
       <div className="statement-left">
         <div className="statement-label">
-          <span className="blue-dot"/>
           {t.home.statementLabel.split('\n').map((line, i) => (
             <span key={line}>{i > 0 && <br/>}{line}</span>
           ))}
@@ -50,7 +43,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <Reveal className="statement-portrait" variant="scale" delay={120}>
         <div className="statement-portrait-frame">
           <Image src={photos.isabellaGuided} alt="Isabella Hidalgo" fill sizes="(max-width:768px) 100vw, 40vw" style={{ objectFit: 'cover' }}/>
-          <div className="statement-portrait-tag"><span>{t.home.portraitTag}</span></div>
         </div>
       </Reveal>
     </Container>
@@ -70,7 +62,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <Reveal as="li" key={w.slug} variant="up" delay={i * 60}>
               <Link href={at(`/gallery/${w.slug}`)} className="phrase-row">
                 <span className="phrase-num">{String(i + 1).padStart(2, '0')}</span>
-                <span className="phrase-text">{w.quote}</span>
+                <span className="phrase-text">{w.quote || w.title}</span>
                 <span className="phrase-meta">{w.size}</span>
                 <span className="phrase-arrow" aria-hidden="true">↗</span>
               </Link>
@@ -78,6 +70,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           ))}
         </ol>
       </Container>
+    </section>
+
+    {/* ── CARRUSEL DE OBRA ── */}
+    <section className="art-wall">
+      <Container className="art-wall-top">
+        <Reveal variant="up">
+          <p className="eyebrow">{t.home.selectionEyebrow}</p>
+          <h2>{t.home.selectionTitle}<br/><em>{t.home.selectionTitleEm}</em></h2>
+        </Reveal>
+      </Container>
+      <ArtCarousel works={works} />
     </section>
 
     {/* ── BANDA PANORÁMICA A TODO EL ANCHO ── */}
@@ -89,33 +92,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </div>
     </section>
 
-    {/* ── CARRUSEL DE OBRA ── */}
-    <section className="art-wall">
-      <Container className="art-wall-top">
-        <Reveal variant="up">
-          <p className="eyebrow">{t.home.selectionEyebrow}</p>
-          <h2>{t.home.selectionTitle}<br/><em>{t.home.selectionTitleEm}</em></h2>
-        </Reveal>
-        <Link href={at('/gallery')} className="circle-link">{t.home.viewGallery}</Link>
-      </Container>
-      <ArtCarousel works={works} />
-    </section>
-
     {/* ── DÍPTICO EDITORIAL ── */}
     <Container as="section" className="diptych">
-      <Reveal as="figure" className="diptych-figure diptych-tall" variant="left">
-        <Image src={photos.studioFrames} alt={t.home.captionFrames} fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
-        <figcaption>{t.home.captionFrames}</figcaption>
-      </Reveal>
+      <div className="diptych-left">
+        <Reveal className="diptych-copy diptych-head" variant="up">
+          <p className="eyebrow">{t.home.processEyebrow}</p>
+          <h2>{t.home.processTitle}<br/><em>{t.home.processTitleEm}</em></h2>
+        </Reveal>
+        <Reveal as="figure" className="diptych-figure diptych-tall" variant="left">
+          <Image src={photos.studioFrames} alt={t.home.captionFrames} fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
+        </Reveal>
+      </div>
 
       <div className="diptych-col">
         <Reveal as="figure" className="diptych-figure" variant="right" delay={100}>
           <Image src={photos.canvasStack} alt={t.home.captionStack} fill sizes="(max-width:900px) 100vw, 46vw" style={{ objectFit: 'cover' }}/>
-          <figcaption>{t.home.captionStack}</figcaption>
         </Reveal>
         <Reveal className="diptych-copy" variant="up" delay={180}>
-          <p className="eyebrow">{t.home.processEyebrow}</p>
-          <h2>{t.home.processTitle}<br/><em>{t.home.processTitleEm}</em></h2>
           <p>{t.home.processBody}</p>
           <Link href={at('/about')} className="button-link button-plain">{t.home.meetIsabella}</Link>
         </Reveal>
@@ -134,7 +127,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         autoPlay muted loop playsInline
         aria-label="Isabella Hidalgo"
       />
-      <div className="film-controls"><span>TO GROW STUDIO</span><span>PLAYING · 00:24</span></div>
     </section>
 
     {/* ── LLEVAR ARTE A CASA ── */}

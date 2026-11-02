@@ -13,6 +13,7 @@ export default function ProductView({
 }: { work: Work; related: Work[]; locale: Locale }) {
   const { add, openCart } = useContext(CartContext)
   const { t } = useI18n()
+  const soon = work.price === 0
   const [shot, setShot] = useState(0)
   const [qty, setQty] = useState(1)
   const [framed, setFramed] = useState(false)
@@ -44,11 +45,11 @@ export default function ProductView({
               <Image
                 key={shot}
                 src={work.images[shot]}
-                alt={work.title}
+                alt={shot === 0 ? (work.alt?.[locale] ?? work.title) : work.title}
                 fill
                 priority
                 sizes="(max-width:900px) 100vw, 55vw"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'contain' }}
               />
             </div>
 
@@ -73,21 +74,23 @@ export default function ProductView({
           <div className="product-info">
             <p className="eyebrow">{t.product.eyebrow}</p>
             <h1 className="product-title">{work.title}</h1>
-            <p className="product-quote">“{work.quote}”</p>
+            {work.quote && <p className="product-quote">“{work.quote}”</p>}
 
             <div className="product-price-row">
-              <span className="product-price">€{unit.toLocaleString()}</span>
-              {!work.available && <span className="product-tag-sold">{t.product.sold}</span>}
+              <span className="product-price">{soon ? (locale === 'es' ? 'Próximamente' : 'Coming soon') : `€${unit.toLocaleString()}`}</span>
+              {!work.available && !soon && <span className="product-tag-sold">{t.product.sold}</span>}
               {work.donation && <span className="product-tag-donation">{t.product.donation}</span>}
             </div>
 
-            <dl className="product-specs">
-              <div><dt>{t.product.size}</dt><dd>{work.size}</dd></div>
-              <div><dt>{t.product.technique}</dt><dd>{medium}</dd></div>
-              <div><dt>{t.product.year}</dt><dd>{work.year}</dd></div>
-            </dl>
+            {!soon && (
+              <dl className="product-specs">
+                <div><dt>{t.product.size}</dt><dd>{work.size}</dd></div>
+                <div><dt>{t.product.technique}</dt><dd>{medium}</dd></div>
+                <div><dt>{t.product.year}</dt><dd>{work.year}</dd></div>
+              </dl>
+            )}
 
-            {work.available ? (
+            {soon ? null : work.available ? (
               <>
                 {work.framedPrice && (
                   <div className="product-option">
@@ -122,9 +125,9 @@ export default function ProductView({
               </div>
             )}
 
-            <p className="product-story">{work.story[locale]}</p>
+            {work.story[locale] && <p className="product-story">{work.story[locale]}</p>}
 
-            <div className="product-panels">
+            {!soon && <div className="product-panels">
               {panels.map(([key, label, body]) => (
                 <div key={key} className={`product-panel${openPanel === key ? ' is-open' : ''}`}>
                   <button onClick={() => setOpenPanel(openPanel === key ? null : key)} aria-expanded={openPanel === key}>
@@ -134,7 +137,7 @@ export default function ProductView({
                   {openPanel === key && <p>{body}</p>}
                 </div>
               ))}
-            </div>
+            </div>}
           </div>
         </div>
       </Container>
