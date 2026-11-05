@@ -1332,3 +1332,32 @@ body{line-height:1.75}
   .statement-portrait-frame{height:auto;aspect-ratio:2/3;width:100%}
   .statement-portrait-frame img{object-position:center}
 }
+
+/* "Sobre Isabella": titular y texto más pequeños (escritorio; móvil ya tenía su tamaño) */
+@media(min-width:769px){
+  .page-intro h1{font-size:clamp(34px,3.8vw,56px);line-height:1.05;max-width:760px}
+  .about-copy .intro-lede{font-size:clamp(17px,1.4vw,21px);line-height:1.5}
+  .about-copy p:not(.intro-lede){font-size:clamp(13px,.95vw,15px);line-height:1.75}
+}
+
+/* Sección "Visto en tiempo real" (Sobre Isabella): fondo claro de marca y textos con la paleta */
+.reels-section{background:#f9f7f3;color:var(--ink)}
+.reels-title{color:var(--ink)}
+.reels-title em{color:#fdbb38}
+.reels-section .eyebrow{color:#ea62f6}
+.reels-ig-link{color:var(--ink);border-color:var(--ink)}
+.reels-ig-link:hover{color:#ea62f6;border-color:#ea62f6}
+.reel-card{color:var(--ink)}
+.reel-label{color:var(--ink)}
+.reels-note{color:var(--muted);border-top-color:var(--line)}
+
+/* "para tu pared." */
+.shop-callout h2 em{color:#decaa4}
+
+/* Página de galería: titular y texto más pequeños, "lleva una frase." en amarillo */
+.gallery-hero h1{font-size:clamp(32px,4vw,58px);line-height:1.05;margin-bottom:22px}
+.gallery-hero h1 em{color:#fdbb38}
+.gallery-hero-lede{font-size:clamp(14px,1.1vw,17px);line-height:1.65}
+
+/* "Obra disponible · 2026" */
+.gallery-hero .eyebrow{color:#4e4c4c}

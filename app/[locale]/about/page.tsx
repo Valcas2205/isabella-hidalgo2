@@ -114,12 +114,6 @@ export default async function About({
               </div>
               <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[1]}</figcaption>
             </Reveal>
-            <Reveal as="figure" className="studio-wall-item" variant="up" delay={160}>
-              <div className="studio-wall-photo">
-                <Image src={photos.isabellaWisdom} alt={t.about.studioWallCaptions[2]} width={900} height={1350} sizes="(max-width:768px) 100vw, 40vw" />
-              </div>
-              <figcaption className="studio-wall-cap">{t.about.studioWallCaptions[2]}</figcaption>
-            </Reveal>
             <Reveal as="figure" className="studio-wall-item" variant="up" delay={240}>
               <div className="studio-wall-photo">
                 <Image src={photos.nothingToForce} alt={t.about.studioWallCaptions[3]} width={900} height={1125} sizes="(max-width:768px) 100vw, 40vw" />
