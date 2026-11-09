@@ -27,9 +27,11 @@ const SCATTER = [
   { wave: 0, x: 55, y: 19, w: 11.5, mx: 82, my: 27 },
   { wave: 0, x: 89, y: 30, w: 15, mx: 38, my: 31 },
   { wave: 0, x: 18, y: 72, w: 12, mx: 16, my: 70 },
-  { wave: 0, x: 41, y: 80, w: 10.5, mx: 50, my: 82 },
+  { wave: 0, x: 33, y: 80, w: 10.5, mx: 60, my: 84 },
   { wave: 0, x: 70, y: 76, w: 14, mx: 78, my: 68 },
   { wave: 0, x: 93, y: 74, w: 9.5, mx: 88, my: 88 },
+  // La foto principal ya no está fija: es una más de la animación (tanda 1)
+  { wave: 0, x: 50, y: 86, w: 15, mx: 28, my: 90, photo: true },
   // ── Tanda 2 ──
   { wave: 1, x: 8, y: 24, w: 9.5, mx: 80, my: 12 },
   { wave: 1, x: 14, y: 64, w: 15, mx: 24, my: 20 },
@@ -40,6 +42,9 @@ const SCATTER = [
   { wave: 1, x: 60, y: 80, w: 10.5, mx: 75, my: 82 },
   { wave: 1, x: 30, y: 82, w: 9.5, mx: 40, my: 88 },
 ]
+
+let nextImg = 0
+const IMG_OF = SCATTER.map(s => (s.photo ? -1 : nextImg++))
 
 /* Progreso del scroll (0–1) en que empieza cada tanda */
 const WAVE_AT = [0.12, 0.55]
@@ -97,14 +102,6 @@ export default function HeroTrail({
     <section className="hero-stage" ref={stageRef}>
       <div className="hero-sticky">
 
-        <div className="hero-grid">
-          <div className="hero-cell hero-cell-center">
-            <div className="hero-center">
-              <Image src={photo} alt="Isabella Hidalgo" fill priority sizes="(max-width:768px) 40vw, 24vw"/>
-            </div>
-          </div>
-        </div>
-
         {SCATTER.map((s, i) => (
           <div
             key={i}
@@ -112,11 +109,16 @@ export default function HeroTrail({
             style={{ '--x': `${s.x}%`, '--y': `${s.y}%`, '--w': s.w, '--mx': `${s.mx}%`, '--my': s.my / 100 } as React.CSSProperties}
           >
             <div
-              className="hero-scatter"
+              className={`hero-scatter${s.photo ? ' hero-scatter-wide' : ''}`}
               ref={el => { itemRefs.current[i] = el }}
               style={{ '--d': `${(i % 8) * 0.12}s` } as React.CSSProperties}
             >
-              <Image src={images[i % images.length]} alt="" fill sizes="(max-width:768px) 40vw, 30vw"/>
+              <Image
+                src={s.photo ? photo : images[IMG_OF[i] % images.length]}
+                alt={s.photo ? 'Isabella Hidalgo' : ''}
+                fill
+                sizes="(max-width:768px) 40vw, 30vw"
+              />
             </div>
           </div>
         ))}

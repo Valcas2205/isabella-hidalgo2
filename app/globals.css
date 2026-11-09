@@ -1361,3 +1361,26 @@ body{line-height:1.75}
 
 /* "Obra disponible · 2026" */
 .gallery-hero .eyebrow{color:#4e4c4c}
+
+/* Carrusel "La selección actual / Quédate con la sensación": las fotos llenan su marco */
+.carousel-img img{object-fit:cover}
+
+/* "Otras obras de la serie" (ficha de obra): las fotos llenan su marco.
+   !important porque el componente fija object-fit en línea. */
+.product-related .new-work-image img{object-fit:cover!important}
+
+/* La foto principal del hero es una imagen más de la animación: horizontal (432×287), sin recorte */
+.hero-spot .hero-scatter.hero-scatter-wide{aspect-ratio:432/287;width:min(calc(var(--w)*1vw),52svh)}
+@media(max-width:768px){
+  .hero-spot .hero-scatter.hero-scatter-wide{width:min(calc(var(--w)*2.7vw),40svh)}
+}
+
+/* Portada: el menú flota encima del hero (no ocupa sitio), así el hero ocupa toda la pantalla
+   y el logo queda centrado. Fondo translúcido para que se lea sobre cualquier sección. */
+body:has(.hero-stage) .site-header{
+  position:sticky;top:0;z-index:20;
+  margin-bottom:calc(-1 * var(--header-h));
+  background:rgba(249,247,243,.72);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom-color:transparent;
+}
