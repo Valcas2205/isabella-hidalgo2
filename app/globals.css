@@ -1384,3 +1384,7 @@ body:has(.hero-stage) .site-header{
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   border-bottom-color:transparent;
 }
+
+/* Menú que se esconde al bajar y reaparece al subir: fijo arriba (sticky) en todas las páginas */
+.site-header{position:sticky;top:0;z-index:15;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.site-header.is-hidden{transform:translateY(-100%)}

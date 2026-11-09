@@ -129,6 +129,26 @@ export function Header() {
     }
   }, [navOpen])
 
+  /* El menú se esconde al bajar y reaparece al subir (o al estar arriba del todo).
+     Con el menú móvil abierto nunca se esconde. */
+  const [hidden, setHidden] = useState(false)
+  useEffect(() => {
+    let lastY = window.scrollY
+    let ticking = false
+    const update = () => {
+      ticking = false
+      const y = window.scrollY
+      const delta = y - lastY
+      if (y < 80) setHidden(false)
+      else if (delta > 6) setHidden(true)
+      else if (delta < -6) setHidden(false)
+      if (Math.abs(delta) > 6 || y < 80) lastY = y
+    }
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update) } }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   const links: [string, string][] = [
     ['/', t.nav.home],
     ['/about', t.nav.about],
@@ -137,7 +157,7 @@ export function Header() {
   ]
 
   return (
-    <header className={`site-header${navOpen ? ' nav-open' : ''}`}>
+    <header className={`site-header${navOpen ? ' nav-open' : ''}${hidden && !navOpen ? ' is-hidden' : ''}`}>
       <Container>
         <LocaleLink href="/" className="brand" aria-label="Isabella Hidalgo" onClick={close}>
           <Image src={logo} alt="Isabella Hidalgo Fine Art" width={140} height={160} priority />
